@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Titulo de la casilla (ventana( del navegador-->
+    <title>Tablero</title>
+
+    <%- include ('partials/head.html'); -%>
+        <%- include ('partials/head_tablero.html'); -%>
+</head>
+
+<body class="pagina-panel pt-2">
+
+    <div class="etiqueta mx-3 mt-2">
+        <div class="row">
+            <div class="col-7 col-sm-7 col-md-6 col-lg-8">
+                <h2 class="mx-1 mx-md-3 mx-sm-3 mx-lg-3 pt-2 pb-1 text-white m-0">
+                    <img src="/logos/<%= datos.logo %>" height="50px" width="50px" class="m-0">
+                    <spam id="html-titulo-tablero" style="font-size: 85%;" class="mx-2">Tablero</spam>
+                </h2>
+            </div>
+
+            <div class="col-5 col-sm-5 col-md-6 col-lg-4 my-auto ">
+                <div class="d-flex justify-content-end py-auto pr-3">
+                    <button id="btn-diseñar" type="button" class="btn btn-primary px-3 mr-3"
+                        style="border-radius: 5rem;  transition: all 0.2s; display: none;"> </button>
+                    <button id="btn-cerrar-sesion" type="button" class="btn btn-danger px-3"
+                        style="border-radius: 5rem;  transition: all 0.2s;"> </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mx-3 mb-0 mt-4">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                <h5 style="color: rgb(255, 255, 255, 1);"><span style="color: rgb(255, 255, 255, 0.5);"
+                        class="iconify mr-2" data-icon="bx:bxs-dashboard"></span> Control</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="mx-3 mb-0 mt-3">
+        <div id="html-control" class="row ml-1">
+            <% for(var e=0; e < cantidad_estancias; e++) { %>
+                <% if (estancias[e] !="..." ) { %>
+                    <div id="estancia-control-<%= id_estancias[e] %>" class="col-12 col-sm-12 col-md-12 col-lg-12">
+                        <h6 style="color: rgb(255, 255, 255, 1);">
+                            <span class="iconify" data-icon="akar-icons:arrow-down"></span>
+                            <%= estancias[e] %>
+                        </h6>
+                    </div>
+                    <% } %>
+                        <% for(var j=0; j < cantidad_widgets; j++) { %>
+
+                            <% if (id_estancias[e]==id_estancias_widgets[j]) { %>
+
+                                <% if ( (funcion_widgets[j]=="Controlar" ) ) { %>
+
+                                    <% if ( (tipo_widgets[j]=="Interruptor" ) ) { %>
+                                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+                                            <div id="widget-<%= id_widgets[j] %>"
+                                                class="propiedad-widget estilo-widget px-4 p-2">
+                                                <h5 class="mb-2" style="font-size: 90%;">
+                                                    <%= widgets[j] %>
+                                                </h5>
+                                                <div class="d-flex justify-content-center alig-items-center">
+                                                    <div class="cuadro-contenido">
+                                                        <h5 class="cuadro-titulo3 text-center mb-3 html-actuador">
+                                                            <%= variables_widgets[j] %>
+                                                        </h5>
+                                                        <div class="text-center">
+                                                            <label class="switch">
+                                                                <input id="<%= id_widgets[j] %>"
+                                                                    class="<%= id_variables_widgets[j] %>"
+                                                                    type="checkbox" onclick="Funcion_Interruptor(this)">
+                                                                <span class="slider round"></span>
+                                                            </label>
+                                                        </div>
+                                                        <h5 id="msj-<%= id_widgets[j] %>" class="text-center"
+                                                            style="font-size: 95%;"></h5>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <% } %>
+                                            <% if ( (tipo_widgets[j]=="Deslizador" ) ) { %>
+                                                <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+                                                    <div id="widget-<%= id_widgets[j] %>"
+                                                        class="propiedad-widget estilo-widget px-4 p-2">
+                                                        <h5 class="mb-2" style="font-size: 90%;">
+                                                            <%= widgets[j] %>
+                                                        </h5>
+                                                        <div class="d-flex justify-content-center alig-items-center">
+                                                            <div class="cuadro-contenido" style="width: 100%;">
+                                                                <h5
+                                                                    class="cuadro-titulo3 text-center mb-3 html-actuador">
+                                                                    <%= variables_widgets[j] %>
+                                                                        <%= objeto_unidad_med_variables[id_variables_widgets[j]]
+                                                                            %>
+                                                                </h5>
+                                                                <div class="text-center">
+                                                                    <input disabled id="<%= id_widgets[j] %>"
+                                                                        type="text"
+                                                                        class="<%= id_variables_widgets[j] %> js-range-slider"
+                                                                        value="" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <% } %>
+                                                    <% } %>
+                                                        <% } %>
+                                                            <% } %>
+                                                                <% } %>
+        </div>
+    </div>
+
+    <div class="mx-3 mb-0">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-3">
+                <h5 style="color: rgb(255, 255, 255, 1);"><span style="color: rgb(255, 255, 255, 0.5);"
+                        class="iconify mr-2" data-icon="bx:bxs-dashboard"></span> Monitoreo</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="mx-3 mb-0 mt-3">
+        <div id="html-monitoreo" class="row ml-1">
+            <% for(var e=0; e < cantidad_estancias; e++) { %>
+                <% if (estancias[e] !="..." ) { %>
+                    <div id="estancia-monitoreo-<%= id_estancias[e] %>" class="col-12 col-sm-12 col-md-12 col-lg-12">
+                        <h6 style="color: rgb(255, 255, 255, 1);">
+                            <span class="iconify" data-icon="akar-icons:arrow-down"></span>
+                            <%= estancias[e] %>
+                        </h6>
+                    </div>
+                    <% } %>
+                        <% for(var j=0; j < cantidad_widgets; j++) { %>
+
+                            <% if (id_estancias[e]==id_estancias_widgets[j]) { %>
+
+                                <% if ( (funcion_widgets[j]=="Monitorear" ) ) { %>
+
+                                    <% if (tipo_widgets[j]=="Texto" ) { %>
+                                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+                                            <div id="widget-<%= id_widgets[j] %>"
+                                                class="propiedad-widget estilo-widget px-4 p-2">
+                                                <h5 class="mb-2" style="font-size: 90%;">
+                                                    <%= widgets[j] %>
+                                                </h5>
+                                                <div class="d-flex justify-content-center alig-items-center">
+                                                    <div class="cuadro-contenido">
+                                                        <h5 class="cuadro-titulo3 text-center mb-3 html-actuador">
+                                                            <%= variables_widgets[j] %>
+                                                        </h5>
+                                                        <div class="text-center mt-2">
+                                                            <h3 id="<%= id_widgets[j] %>"
+                                                                class="<%= id_variables_widgets[j] %>">
+                                                            </h3>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <% } %>
+                                            <% if (tipo_widgets[j]=="Interruptor" ) { %>
+                                                <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+                                                    <div id="widget-<%= id_widgets[j] %>"
+                                                        class="propiedad-widget estilo-widget px-4 p-2">
+                                                        <h5 class="mb-2" style="font-size: 90%;">
+                                                            <%= widgets[j] %>
+                                                        </h5>
+                                                        <div class="d-flex justify-content-center alig-items-center">
+                                                            <div class="cuadro-contenido">
+                                                                <h5
+                                                                    class="cuadro-titulo3 text-center mb-3 html-actuador">
+                                                                    <%= variables_widgets[j] %>
+                                                                </h5>
+                                                                <div class="text-center">
+                                                                    <label class="switch">
+                                                                        <input disabled id="<%= id_widgets[j] %>"
+                                                                            class="<%= id_variables_widgets[j] %>"
+                                                                            type="checkbox"
+                                                                            onclick="Funcion_Interruptor(this)">
+                                                                        <span class="slider round"></span>
+                                                                    </label>
+                                                                </div>
+                                                                <h5 id="msj-<%= id_widgets[j] %>" class="text-center"
+                                                                    style="font-size: 95%;"></h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <% } %>
+                                                    <% if (tipo_widgets[j]=="Deslizador" ) { %>
+                                                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+                                                            <div id="widget-<%= id_widgets[j] %>"
+                                                                class="propiedad-widget estilo-widget px-4 p-2">
+                                                                <h5 class="mb-2" style="font-size: 90%;">
+                                                                    <%= widgets[j] %>
+                                                                </h5>
+                                                                <div
+                                                                    class="d-flex justify-content-center alig-items-center">
+                                                                    <div class="cuadro-contenido" style="width: 100%;">
+                                                                        <h5
+                                                                            class="cuadro-titulo3 text-center mb-3 html-actuador">
+                                                                            <%= variables_widgets[j] %>
+                                                                                <%= objeto_unidad_med_variables[id_variables_widgets[j]]
+                                                                                    %>
+                                                                        </h5>
+                                                                        <div disabled class="text-center">
+                                                                            <input disabled id="<%= id_widgets[j] %>"
+                                                                                type="text"
+                                                                                class="<%= id_variables_widgets[j] %> js-range-slider"
+                                                                                value="" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <% } %>
+                                                            <% if (tipo_widgets[j]=="Tabla" ) { %>
+                                                                <div
+                                                                    class="col-12 col-sm-12 col-md-12 col-lg-12 mt-4 mb-1">
+                                                                    <h6 style="color: beige;">
+                                                                        <%= widgets[j] %>
+                                                                    </h6>
+                                                                    <div
+                                                                        class="d-flex m-0 mb-2 ml-3 justify-content-start">
+                                                                        <h6 class="my-auto mr-3"
+                                                                            style="color: rgb(255, 255, 255, 1);">Desde:
+                                                                        </h6>
+                                                                        <input id="datepicker-<%= id_widgets[j] %>-a"
+                                                                            class="datepicker-style picker-style"
+                                                                            width="180" />
+                                                                        <h6 class="my-auto ml-3 mr-3"
+                                                                            style="color: rgb(255, 255, 255, 1);">Hasta:
+                                                                        </h6>
+                                                                        <input id="datepicker-<%= id_widgets[j] %>-b"
+                                                                            class="datepicker-style picker-style"
+                                                                            width="180" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-1">
+                                                                    <div class="table-responsive px-0">
+                                                                        <table id="widget-<%= id_widgets[j] %>"
+                                                                            class="table table-bordered table-dark">
+
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th scope="col"
+                                                                                        style="text-align: center;">
+                                                                                        Fecha
+                                                                                    </th>
+                                                                                    <% for(var tt=0; tt <
+                                                                                        cantidad_columnas_tablas_widgets[id_widgets[j]];tt++)
+                                                                                        { %>
+                                                                                        <th scope="col"
+                                                                                            style="text-align: center;">
+                                                                                            <%= titulos_tablas_widgets[id_widgets[j]][tt]
+                                                                                                %> <span
+                                                                                                    style="font-size: 50%;">(
+                                                                                                    <%= titulos_id_variables_tablas_widgets[id_widgets[j]][tt]
+                                                                                                        %>)
+                                                                                                </span>
+                                                                                        </th>
+                                                                                        <% } %>
+                                                                                </tr>
+                                                                            </thead>
+
+                                                                            <tbody id="tabla-body-<%= id_widgets[j] %>">
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                    <div class="text-center mt-0 mb-0"
+                                                                        style="width: 100%;">
+                                                                        <ul class="pagination pager justify-content-center mb-0"
+                                                                            id="myPager-<%= id_widgets[j] %>"></ul>
+                                                                    </div>
+                                                                </div>
+                                                                <% } %>
+
+
+                                                                    <% } %>
+                                                                        <% } %>
+                                                                            <% } %>
+                                                                                <% } %>
+        </div>
+    </div>
+
+    <div id="html-seleccion-variable-grafica" class="mx-3 mb-0 mt-3" style="display: none;">
+        <div class="d-flex">
+            <h6 class="my-auto" style="color: rgb(255, 255, 255, 1);"> <span style="color: rgb(255, 255, 255, 0.5);"
+                    class="iconify mr-2" data-icon="ant-design:area-chart-outlined"></span> Variable:
+            </h6>
+            <div class="input-group ml-3 mr-1" style="width:180px;">
+                <select id="input-seleccion-grafica" class="custom-select input-group-btn">
+                    <% for(var j=0; j < cantidad_widgets; j++) { %>
+                        <% if ( (tipo_widgets[j]=="Grafico_linea" ) ) { %>
+                            <option value=<%=id_widgets[j] %>><%= variables_widgets[j] %>
+                            </option>
+                            <% } %>
+                                <% } %>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="mx-3 mb-0 mt-2">
+        <div class="row">
+            <% for(var j=0; j < cantidad_widgets; j++) { %>
+                <% if ( (tipo_widgets[j]=="Grafico_linea" ) ) { %>
+
+                    <div id="html-grafica-<%= id_widgets[j] %>" class="html-graficas"
+                        style="display: none; width: 100%;">
+                        <div class="mx-3 mb-0">
+                            <div class="row">
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2">
+                                    <div class="d-flex m-0 mb-2 ml-3 justify-content-start">
+                                        <h6 class="my-auto mr-3" style="color: rgb(255, 255, 255, 1);">Desde:</h6>
+                                        <input id="datepicker-<%= id_widgets[j] %>-a"
+                                            class="datepicker-style picker-style" width="180" />
+                                        <h6 class="my-auto ml-3 mr-3" style="color: rgb(255, 255, 255, 1);">Hasta:</h6>
+                                        <input id="datepicker-<%= id_widgets[j] %>-b"
+                                            class="datepicker-style picker-style" width="180" />
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-2 mt-2">
+                                    <div class="container-grafica-grande">
+                                        <div class="d-flex mb-2">
+                                            <h6 style="font-size: 90%;" class="html-titulo-graficas text-white ml-4">
+                                                <%= variables_widgets[j] %> (
+                                                    <%= dispositivos_variables[id_variables_widgets[j]]%>)
+                                            </h6>
+                                            <div class="ml-auto">
+                                                <span id="html-min-<%= id_widgets[j] %>" class="html-min mr-3"
+                                                    style="font-size: 90%; color:rgb(255, 255, 255, 1);"> </span>
+                                                <span id="html-max-<%= id_widgets[j] %>" class="html-max mr-4"
+                                                    style="font-size: 90%; color:rgb(255, 255, 255, 1);"> </span>
+                                            </div>
+                                        </div>
+                                        <canvas id="<%= id_widgets[j] %>"
+                                            class="<%= id_variables_widgets[j] %> myChart grafico">
+                                        </canvas>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-2">
+                                    <div class="d-flex flex-row-reverse">
+                                        <button id="html-reporte-<%= id_widgets[j] %>" type="button"
+                                            class="btn btn-descargar-reporte"> <i class="fa fa-download"></i> </button>
+
+                                        <div class="input-group mr-1" style="width:180px;">
+                                            <select id="input-reporte-<%= id_widgets[j] %>" class="custom-select">
+                                                <option value="0" selected>Generar reporte</option>
+                                                <option value="1">PDF</option>
+                                                <option value="2">CSV</option>
+                                            </select>
+                                        </div>
+
+                                        <div id="spinner-reporte-<%= id_widgets[j] %>" class="mr-3"
+                                            style="display: none;">
+                                            <div class="d-flex justify-content-center">
+                                                <div class="spinner-border text-primary" role="status">
+                                                    <span class="sr-only">Loading...</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <% } %>
+                        <% } %>
+        </div>
+    </div>
+
+    <%- include ('partials/footer.html'); -%>
+        <%- include ('partials/footer_tablero.html'); -%>
+
+            <!--Configuracion de notificacion web-push-->
+            <script src="/conf-web-push.js"></script>
+
+            <script>
+                var padre1 = document.getElementById("html-control");
+                if (padre1.hasChildNodes()) {
+                    var es_estancia = 0;
+                    var children = padre1.childNodes;
+                    for (var i = 0; i < children.length; i++) {
+                        var tipo_children = children[i].nodeName;
+                        if (tipo_children != "#text") {
+                            var id = children[i].id;
+                            if (id) {
+                                if (es_estancia == 1) {
+                                    document.getElementById(id_estancia_anterior).style.display = "none";
+                                    id_estancia_anterior = id;
+                                } else {
+                                    es_estancia = 1;
+                                    id_estancia_anterior = id;
+                                }
+                            } else {
+                                es_estancia = 0;
+                            }
+                        }
+                    }
+                    if (es_estancia == 1) {
+                        document.getElementById(id_estancia_anterior).style.display = "none";
+                        es_estancia = 0;
+                    }
+                }
+
+                var padre2 = document.getElementById("html-monitoreo");
+                if (padre2.hasChildNodes()) {
+                    var es_estancia = 0;
+                    var children = padre2.childNodes;
+                    for (var i = 0; i < children.length; i++) {
+                        var tipo_children = children[i].nodeName;
+                        if (tipo_children != "#text") {
+                            var id = children[i].id;
+                            if (id) {
+                                if (es_estancia == 1) {
+                                    document.getElementById(id_estancia_anterior).style.display = "none";
+                                    id_estancia_anterior = id;
+                                } else {
+                                    es_estancia = 1;
+                                    id_estancia_anterior = id;
+                                }
+                            } else {
+                                es_estancia = 0;
+                            }
+                        }
+                    }
+                    if (es_estancia == 1) {
+                        document.getElementById(id_estancia_anterior).style.display = "none";
+                        es_estancia = 0;
+                    }
+                }
+
+
+                // Declaracion de variables globales
+                window.usuario = "<%= datos.id %>"
+                window.permiso_edicion = "<%= datos.permiso_edicion %>"
+
+                if (window.permiso_edicion == 1) {
+                    document.getElementById("btn-diseñar").style.display = "block";
+                }
+
+                window.myChart = {}
+                window.ctx = {}
+                window.propiedad_chart = {}
+                window.gradient = {}
+
+                window.cantidad_widgets = "<%= cantidad_widgets %>"
+                window.cantidad_variables = "<%= cantidad_variables %>"
+
+                window.id_variables = "<%= id_variables %>"
+                window.id_dispositivos_variables = "<%= id_dispositivos_variables %>"
+                window.unidad_med_variables = "<%= unidad_med_variables %>"
+                window.id_widgets = "<%= id_widgets %>"
+                window.id_variables_widgets = "<%= id_variables_widgets %>"
+                window.variables_widgets = "<%= variables_widgets %>"
+                window.id_variables_tablas_widgets = "<%- id_variables_tablas_widgets %>"
+                window.aux_conteo_dispositivos_variables = "<%= dispositivos2_variables %>"
+                window.aux_conteo_id_dispositivos_variables = "<%= id_dispositivos_variables %>"
+                window.tipo_widgets = "<%= tipo_widgets %>"
+                window.min_widgets = "<%= min_widgets %>"
+                window.max_widgets = "<%= max_widgets %>"
+                window.msj_interruptor_off = "<%= msj_off_widgets %>"
+                window.msj_interruptor_on = "<%= msj_on_widgets %>"
+                window.funcion_widgets = "<%= funcion_widgets %>"
+
+                window.id_variables = window.id_variables.split(',');
+                window.id_dispositivos_variables = window.id_dispositivos_variables.split(',');
+                window.unidad_med_variables = window.unidad_med_variables.split(',');
+                window.id_widgets = window.id_widgets.split(',');
+                window.id_variables_widgets = window.id_variables_widgets.split(',');
+                window.variables_widgets = window.variables_widgets.split(',');
+                window.id_variables_tablas_widgets = window.id_variables_tablas_widgets.split(',');
+                window.aux_conteo_dispositivos_variables = window.aux_conteo_dispositivos_variables.split(',');
+                window.aux_conteo_id_dispositivos_variables = window.aux_conteo_id_dispositivos_variables.split(',');
+                window.tipo_widgets = window.tipo_widgets.split(',');
+                window.min_widgets = window.min_widgets.split(',');
+                window.max_widgets = window.max_widgets.split(',');
+                window.msj_interruptor_off = window.msj_interruptor_off.split(',');
+                window.msj_interruptor_on = window.msj_interruptor_on.split(',');
+                window.funcion_widgets = window.funcion_widgets.split(',');
+
+                window.dispositivos_variables = "<%= dispositivos_variables %>"
+
+                console.log(window.id_variables_tablas_widgets)
+
+                // Configuracion de Widgets
+                window.msj_off = {}
+                window.msj_on = {}
+                window.aux_objeto_deslizador = {};
+                window.objeto_deslizador = {};
+                window.tipo_elemento_widgets = {};
+
+                window.id_variables_graficas = {};
+                window.id_widgets_graficas = {};
+
+                window.conteo_id_variables_graficas = [];
+                window.conteo_id_widgets_graficas = [];
+                var g = 0;
+
+                window.nombre_variables_widgets = {};
+
+                window.objeto_id_variables_widgets = {};
+                window.objeto_id_dispositivos_variables = {};
+
+                window.objeto_funcion_widgets = {};
+
+                // Tablas
+                window.id_variables_tablas = {};
+                window.id_widgets_tablas = {};
+                window.conteo_id_variables_tablas = [];
+                window.conteo_id_widgets_tablas = [];
+                var t = 0;
+                window.cantidad_tablas = 0;
+
+                for (var i = 0; i < window.cantidad_widgets; i++) {
+                    window.objeto_id_variables_widgets[window.id_widgets[i]] = window.id_variables_widgets[i];
+                    window.objeto_funcion_widgets[window.id_widgets[i]] = window.funcion_widgets[i];
+                    var id_w = window.id_widgets[i];
+
+                    if (window.tipo_widgets[i] == "Texto") {
+                        window.tipo_elemento_widgets[id_w] = "Texto";
+                    }
+                    if (window.tipo_widgets[i] == "Interruptor") {
+                        window.msj_off[id_w] = window.msj_interruptor_off[i];
+                        window.msj_on[id_w] = window.msj_interruptor_on[i];
+                        window.tipo_elemento_widgets[id_w] = "Interruptor";
+                    }
+                    if (window.tipo_widgets[i] == "Deslizador") {
+                        window.tipo_elemento_widgets[id_w] = "Deslizador";
+                        var posicion_fija = false;
+                        if (window.funcion_widgets[i] == "Monitorear")
+                            posicion_fija = true;
+                        window.aux_objeto_deslizador[id_w] = $("#" + id_w)
+                        window.aux_objeto_deslizador[id_w].ionRangeSlider({
+                            skin: "round",
+                            type: "single",
+                            min: window.min_widgets[i],
+                            max: window.max_widgets[i],
+                            from_fixed: posicion_fija,
+                            onStart: Funcion_Deslizante,
+                            onChange: Funcion_Deslizante
+                        });
+                        window.objeto_deslizador[id_w] = window.aux_objeto_deslizador[id_w].data("ionRangeSlider");
+                    }
+                    if (window.tipo_widgets[i] == "Grafico_linea") {
+                        window.tipo_elemento_widgets[id_w] = "Grafico_linea";
+                        window.id_variables_graficas[id_widgets[i]] = window.id_variables_widgets[i];
+                        window.nombre_variables_widgets[id_widgets[i]] = window.variables_widgets[i]
+                        window.conteo_id_variables_graficas[g] = window.id_variables_widgets[i];
+                        window.conteo_id_widgets_graficas[g] = window.id_widgets[i];
+                        g = g + 1;
+                    }
+                    if (window.tipo_widgets[i] == "Tabla") {
+                        window.tipo_elemento_widgets[id_w] = "Tabla";
+                        var aux_array_id = window.id_variables_tablas_widgets[t];
+                        aux_array_id = aux_array_id.split('-')
+                        window.id_variables_tablas[id_widgets[i]] = aux_array_id;
+                        window.conteo_id_variables_tablas[t] = aux_array_id;
+                        window.conteo_id_widgets_tablas[t] = window.id_widgets[i];
+                        console.log("Id variables tabla:", aux_array_id, "Widgets", window.id_widgets[i])
+                        t = t + 1;
+                        window.cantidad_tablas = t;
+                    }
+                }
+
+                window.conteo_dispositivos_variables = {}, window.conteo_id_dispositivos_variables = {};
+                window.objeto_unidad_med_variables = {};
+                for (var i = 0; i < window.cantidad_variables; i++) {
+                    var id_v = window.id_variables[i];
+                    window.conteo_dispositivos_variables[id_v] = window.aux_conteo_dispositivos_variables[i];
+                    window.conteo_id_dispositivos_variables[id_v] = window.aux_conteo_id_dispositivos_variables[i];
+                    window.objeto_id_dispositivos_variables[id_v] = window.id_dispositivos_variables[i];
+                    window.objeto_unidad_med_variables[id_v] = window.unidad_med_variables[i];
+                }
+
+                // Inicializar elementos HTML
+                var html_graficas = document.getElementsByClassName('html-graficas');
+                var cantidad_graficas = parseInt(html_graficas.length);
+                console.log("Numero de Graficas:", cantidad_graficas)
+                if (cantidad_graficas > 0) {
+                    document.getElementsByClassName('html-graficas')[0].style.display = "block";
+                    document.getElementById("html-seleccion-variable-grafica").style.display = "block";
+                    document.getElementById("input-seleccion-grafica").value = window.conteo_id_widgets_graficas[0];
+                }
+
+                // Funciones WIDGET
+                function Funcion_Interruptor(aux_checkbox) {
+                  var c=0;
+                    if (window.estado == 1) {
+                        var id_widget = aux_checkbox.id;
+                        var id_variable = aux_checkbox.className;
+                        var id_dispositivo = window.objeto_id_dispositivos_variables[id_variable];
+
+                        var checkbox = document.getElementById(id_widget);
+                        var val = 0;
+                        if (checkbox.checked == true)
+                            val = 1;
+                        console.log(id_widget, id_variable, val);
+                        const refHosp131=firebase.database().ref().child("cambio");
+                        const datosMostrar141=[];
+                        const datosMostrar151=[];
+                        refHosp131.on("value",function(snapshot){
+                          var datosF131=snapshot.val();
+                          for (var key131 in datosF131) {
+                              datosMostrar141.push(datosF131[key131].id_widgets);
+                              datosMostrar151.push(key131);
+                          }
+                          if(c<1){
+                            c++;
+                            for( var i1=0;i1<datosMostrar141.length;i1++){
+
+                              if(datosMostrar141[i1]==id_widget){
+                                console.log(val);
+                                console.log(datosMostrar151[i1]);
+
+
+                                firebase.database().ref('cambio/'+datosMostrar151[i1]).update({
+                                  val:val,
+                                  titulo:"no vio notificacion"
+                                });
+
+                              }
+                            }
+                          }
+
+
+                        });
+
+
+                        if (window.estado == 1) {
+                            socket.emit('Control-Web', {
+                                id_usuario: window.usuario,
+                                id_dispositivo,
+                                id_variable,
+                                val
+                            });
+                        }
+                    }
+                }
+
+                function Funcion_Deslizante(data) {
+                    if (window.estado == 1) {
+                        //console.log("Se movio deslizante", window.estado)
+                        var id_widget = data.input[0].id;
+
+                        if (window.objeto_funcion_widgets[id_widget] == "Controlar") {
+                            var aux_variable = document.getElementById(id_widget).className;
+                            aux_variable = aux_variable.split(' ');
+                            window.id_variable_deslizante = aux_variable[0];
+                            window.val_deslizante = data.from;
+                            //console.log(id_widget, window.id_variable_deslizante, window.val_deslizante);
+                            window.tiempo_deslizante = new Date().getTime();
+                            window.deslizante_activo = 1;
+                        }
+                    }
+                }
+
+                let Verificacion_Deslizante = setInterval(function () {
+                    var aux_tiempo = new Date().getTime();
+                    if (window.deslizante_activo == 1) {
+                        if ((aux_tiempo - 300) >= window.tiempo_deslizante) {
+                            window.deslizante_activo = 0;
+                            if (window.estado == 1) {
+                                var id_dispositivo = window.objeto_id_dispositivos_variables[window.id_variable_deslizante]
+                                socket.emit('Control-Web', {
+                                    id_usuario: window.usuario,
+                                    id_dispositivo,
+                                    id_variable: window.id_variable_deslizante,
+                                    val: window.val_deslizante
+                                });
+                            }
+                        }
+                    }
+                }, 100);
+            </script>
+
+            <!--Importar la configuracion de las graficas-->
+            <script src="/graficas/propiedad_graficos.js"></script>
+            <script src="/graficas/creacion_graficas.js"></script>
+
+            <script>
+                // Configuracion inicial del selector de Fecha
+                var ano_actual = new Date().getFullYear()
+                var mes_actual = new Date().getMonth()
+                var dia_actual = new Date().getDate()
+                var hora_actual = new Date().getHours()
+                var minuto_actual = new Date().getMinutes()
+                var segundos_actual = new Date().getSeconds()
+
+                var aux_fecha = parseInt(new Date().getTime() - 2592000000);
+                window.aux_fecha_inicio_consulta = new Date(aux_fecha);
+                window.aux_fecha_final_consulta = new Date();
+
+                window.fecha_inicio_consulta = {};
+                window.fecha_final_consulta = {};
+                // Datepicker para Graficas
+                window.cantidad_graficas = parseInt(window.conteo_id_widgets_graficas.length);
+                for (i = 0; i < window.cantidad_graficas; i++) {
+                    window.fecha_inicio_consulta[window.conteo_id_widgets_graficas[i]] = aux_fecha_inicio_consulta
+                    window.fecha_final_consulta[window.conteo_id_widgets_graficas[i]] = aux_fecha_final_consulta
+                }
+                // Datapicker para tablas
+                window.cantidad_tablas = parseInt(window.conteo_id_widgets_tablas.length);
+                for (i = 0; i < window.cantidad_tablas; i++) {
+                    window.fecha_inicio_consulta[window.conteo_id_widgets_tablas[i]] = aux_fecha_inicio_consulta
+                    window.fecha_final_consulta[window.conteo_id_widgets_tablas[i]] = aux_fecha_final_consulta
+                }
+
+                formato_fecha = {
+                    day: "numeric",
+                    month: "numeric",
+                    year: "numeric"
+                };
+                var fecha_inicio_datepicker = new Date(window.aux_fecha_inicio_consulta).toLocaleString("en-GB", formato_fecha);
+                var fecha_final_datepicker = new Date(window.aux_fecha_final_consulta).toLocaleString("en-GB", formato_fecha);
+
+                // Crear cliente socket
+                const socket = io({
+                    autoConnect: true
+                });
+
+                // Conexion socket con el servidor
+                window.estado = 0;
+                socket.on('connect', () => {
+                    if (window.estado == 0) {
+                        window.estado = 1;
+                        socket.emit('WebApp', window.usuario);
+                    }
+                    for (var i = 0; i < window.cantidad_graficas; i++) {
+                        socket.emit('Consultar-Grafica', {
+                            id_usuario: window.usuario,
+                            id_widget: window.conteo_id_widgets_graficas[i],
+                            id_variable: window.conteo_id_variables_graficas[i],
+                            fecha_inicio: aux_fecha_inicio_consulta,
+                            fecha_final: aux_fecha_final_consulta
+                        });
+                    }
+                    for (var i = 0; i < window.cantidad_tablas; i++) {
+                        socket.emit('Consultar-Tabla', {
+                            id_usuario: window.usuario,
+                            id_widget: window.conteo_id_widgets_tablas[i],
+                            id_variables: window.conteo_id_variables_tablas[i],
+                            fecha_inicio: aux_fecha_inicio_consulta,
+                            fecha_final: aux_fecha_final_consulta
+                        });
+                    }
+                });
+                // Recepcion de datos a traves de sockets
+                socket.on('Val_Variables', function (datos) {
+                    if (datos) {
+                        //console.log("Data Val_Variables:", datos);
+                        var id_variable = datos.id_variable;
+                        var valor = datos.val_variable;
+
+                        var elementos_html = document.getElementsByClassName(id_variable)
+                        var cantidad_elementos_html = parseInt(elementos_html.length)
+
+                        for (var i = 0; i < cantidad_elementos_html; i++) {
+                            var id_elemento_html = document.getElementsByClassName(id_variable)[i].getAttribute('id');
+                            var tipo_elemento_html = window.tipo_elemento_widgets[id_elemento_html];
+                            //console.log("ID del widget:", id_elemento_html, "Tipo:", tipo_elemento_html)
+
+                            //  console.log("tipo", tipo_elemento_html)
+
+                            if (tipo_elemento_html == "Texto") {
+                                var unidad_med = window.objeto_unidad_med_variables[id_variable];
+                                document.getElementById(id_elemento_html).innerHTML = valor + " " + unidad_med;
+                            }
+                            if (tipo_elemento_html == "Interruptor") {
+                                if (valor == "0") {
+                                    document.getElementById(id_elemento_html).checked = false;
+                                    document.getElementById("msj-" + id_elemento_html).innerHTML = window.msj_off[id_elemento_html];
+                                } else if (valor == "1") {
+                                    document.getElementById(id_elemento_html).checked = true;
+                                    document.getElementById("msj-" + id_elemento_html).innerHTML = window.msj_on[id_elemento_html];
+                                }
+                            }
+                            if (tipo_elemento_html == "Deslizador") {
+                                window.objeto_deslizador[id_elemento_html].update({
+                                    from: valor
+                                });
+                            }
+                            if (tipo_elemento_html == "Grafico_linea") {
+                                if (datos.dispositivo) {
+                                    window.myChart[id_elemento_html].data.labels.push(datos.fecha);
+                                    window.myChart[id_elemento_html].data.datasets.forEach((dataset) => {
+                                        dataset.data.push(valor);
+                                    });
+                                    window.myChart[id_elemento_html].update();
+                                }
+                            }
+                        }
+                    }
+                });
+                // Recepcion de datos a traves de sockets
+                window.listo_pager_tabla = {};
+                socket.on('Datos_Tabla', function (id_tabla_widget, cantidad_columnas, datos) {
+                    if (datos) {
+                        console.log("Registros tabla:", datos)
+
+                        var id_tabla_html = "tabla-body-" + id_tabla_widget;
+                        var cantidad_datos = parseInt(datos.length)
+
+                        $("#" + id_tabla_html + " tr").remove();
+
+                        for (var i = 0; i < cantidad_datos; i++) {
+                            var dato_tabla = datos[i];
+                            dato_tabla = dato_tabla.split("*");
+                            var fila = "<tr>";
+                            for (var j = 0; j < parseInt(dato_tabla.length); j++) {
+                                if (j == 0) {
+                                    var fecha_tabla = new Date(parseInt(dato_tabla[0])).toLocaleString("en-GB", {
+                                        day: "numeric",
+                                        month: "numeric",
+                                        year: "numeric",
+                                        hour: "numeric",
+                                        minute: "numeric"
+                                    });
+                                    fila = fila + "<td style='text-align: center;'>" + fecha_tabla + "</td>";
+                                } else {
+                                    fila = fila + "<td style='text-align: center;'>" + dato_tabla[j] + "</td>";
+                                }
+                            }
+                            fila = fila + "</tr>";
+                            var btn = document.createElement("TR");
+                            btn.innerHTML = fila;
+                            document.getElementById(id_tabla_html).appendChild(btn);
+                        }
+
+                        var id_pager = "#myPager-" + id_tabla_widget
+                        var id = "#" + id_tabla_html
+                        $('#' + id_tabla_html).pageMe({
+                            pagerSelector: id_pager,
+                            showPrevNext: true,
+                            hidePageNumbers: false,
+                            perPage: 10
+                        });
+                    }
+                });
+                // Recepcion Sockets: Reiniciar graficas
+                socket.on('Reiniciar-Grafica', function (data) {
+                    if (data) {
+                        var id_widget = data.id_widget;
+                        //console.log("Reinicir grafica:", id_widget)
+                        window.myChart[id_widget].destroy();
+                        window.ctx[id_widget] = document.getElementById(id_widget).getContext('2d');
+                        window.myChart[id_widget] = new Chart(window.ctx[id_widget], window.propiedad_chart[id_widget]);
+                    }
+                });
+                // Recepcion Sockets: Limpiar graficas
+                socket.on('Limpiar-Grafica', function (data) {
+                    if (data) {
+                        var id_widget = data.id_widget;
+                        //console.log("Limpiar grafica:", id_widget)
+
+                        etiquetas = window.myChart[id_widget].data.labels
+                        cantidad_datos = etiquetas.length
+                        for (var i = 0; i < cantidad_datos; i++) {
+                            window.myChart[id_widget].data.labels.pop();
+                            window.myChart[id_widget].data.datasets.forEach((dataset) => {
+                                dataset.data.pop();
+                            });
+                            window.myChart[id_widget].update();
+                        }
+                    }
+                });
+                // Recepcion Sockets: Llenar grafica
+                socket.on('Llenar-Grafica', function (data) {
+                    if (data) {
+                        var id_widget = data.id_widget;
+                        var val = data.val;
+                        var fecha = data.fecha;
+                        console.log("Llenar grafica:", id_widget, fecha, val);
+                        var cantidad_datos = parseInt(fecha.length);
+                        if (cantidad_datos == parseInt(val.length)) {
+                            for (var i = 0; i < cantidad_datos; i++) {
+                                window.myChart[id_widget].data.labels.push(fecha[i]);
+                                window.myChart[id_widget].data.datasets.forEach((dataset) => {
+                                    dataset.data.push(val[i]);
+                                });
+                                window.myChart[id_widget].update();
+                            }
+                        }
+                    }
+                });
+                // Recepcion Sockets: Max y Min
+                socket.on('Max_min', function (data) {
+                    if (data) {
+                        var id_widget = data.id_widget;
+                        var id_variable = window.objeto_id_variables_widgets[id_widget];
+                        console.log(id_widget, id_variable)
+                        //console.log("Max y min:", id_widget)
+                        var unidad_med = window.objeto_unidad_med_variables[id_variable]
+                        document.getElementById("html-min-" + id_widget).innerHTML = "Min: " + data.min + unidad_med;
+                        document.getElementById("html-max-" + id_widget).innerHTML = "Max: " + data.max + unidad_med;
+                    }
+                });
+                // Recepcion Sockets: Reporte enviado
+                socket.on('reporte-enviado', function (data) {
+                    if (data) {
+                        var id_widget = data.id_widget;
+                        var nombre_archivo = data.nombre_archivo;
+                        document.getElementById("spinner-reporte-" + id_widget).style.display = "none";
+                        window.open(data.nombre_archivo);
+                        $.alert('' +
+                            '<label>Reporte generado exitosamente</label>' +
+                            '<div class="text-center">' +
+                            '<i class="fas fa-check fa-4x"></i>' +
+                            '</div>');
+                    }
+                });
+                // Recepcion Sockets: Reporte error
+                socket.on('reporte-error', function (data) {
+                    if (data) {
+                        var id_widget = data.id_widget;
+                        document.getElementById("spinner-reporte-" + id_widget).style.display = "none";
+                        $.alert('' +
+                            '<label>Error</label>' +
+                            '<div class="text-center">' +
+                            '<i class="fas fa-times fa-4x"></i>' +
+                            '</div>');
+                    }
+                });
+
+                // Datepicker
+                window.datepicker_a = {}, window.datepicker_b = {};
+                for (i = 0; i < window.cantidad_widgets; i++) {
+                    if (window.tipo_widgets[i] == "Grafico_linea") {
+                        window.datepicker_a[window.id_widgets[i]] = 'datepicker-' + window.id_widgets[i] + '-a';
+                        window.datepicker_b[window.id_widgets[i]] = 'datepicker-' + window.id_widgets[i] + '-b';
+                        $("#" + window.datepicker_a[window.id_widgets[i]]).datepicker({
+                            uiLibrary: 'bootstrap4',
+                            format: 'dd/mm/yyyy',
+                            footer: true,
+                            modal: true,
+                            icons: {
+                                rightIcon: '<i style="color: rgb(255, 255, 255);" class="far fa-calendar-alt"></i>'
+                            },
+                            value: fecha_inicio_datepicker,
+                            maxDate: function () {
+                                return $("#" + window.datepicker_b[window.id_widgets[i]]).val();
+                            },
+                            change: function (e) {
+                                var id = $(this).attr("id")
+                                var id_w = id.split("-")[1];
+
+                                var fecha = $("#" + window.datepicker_a[id_w]).val()
+                                var aux = fecha.split("/")
+                                var ano = aux[2]
+                                var mes = aux[1] - 1
+                                var dia = aux[0]
+                                window.fecha_inicio_consulta[id_w] = new Date(ano, mes, dia)
+                                var id_variable = window.id_variables_graficas[id_w]
+                                Enviar_Datos_Grafica(id_w, id_variable,
+                                    window.fecha_inicio_consulta[id_w], window.fecha_final_consulta[id_w])
+                            }
+                        });
+                        $("#" + window.datepicker_b[window.id_widgets[i]]).datepicker({
+                            uiLibrary: 'bootstrap4',
+                            format: 'dd/mm/yyyy',
+                            footer: true,
+                            modal: true,
+                            icons: {
+                                rightIcon: '<i style="color: rgb(255, 255, 255);" class="far fa-calendar-alt"></i>'
+                            },
+                            value: fecha_final_datepicker,
+                            maxDate: fecha_final_datepicker,
+                            minDate: function () {
+                                return $("#" + window.datepicker_a[window.id_widgets[i]]).val();
+                            },
+                            change: function (e) {
+                                var id = $(this).attr("id")
+                                var id_w = id.split("-")[1];
+
+                                var fecha = $("#" + window.datepicker_b[id_w]).val()
+                                var aux = fecha.split("/")
+                                var ano = aux[2]
+                                var mes = aux[1] - 1
+                                var dia = aux[0]
+                                window.fecha_final_consulta[id_w] = new Date(ano, mes, dia, 23, 59, 59)
+                                var id_variable = window.id_variables_graficas[id_w]
+                                Enviar_Datos_Grafica(id_w, id_variable,
+                                    window.fecha_inicio_consulta[id_w], window.fecha_final_consulta[id_w])
+                            }
+                        });
+                    }
+                    if (window.tipo_widgets[i] == "Tabla") {
+                        window.datepicker_a[window.id_widgets[i]] = 'datepicker-' + window.id_widgets[i] + '-a';
+                        window.datepicker_b[window.id_widgets[i]] = 'datepicker-' + window.id_widgets[i] + '-b';
+                        $("#" + window.datepicker_a[window.id_widgets[i]]).datepicker({
+                            uiLibrary: 'bootstrap4',
+                            format: 'dd/mm/yyyy',
+                            footer: true,
+                            modal: true,
+                            icons: {
+                                rightIcon: '<i style="color: rgb(255, 255, 255);" class="far fa-calendar-alt"></i>'
+                            },
+                            value: fecha_inicio_datepicker,
+                            maxDate: function () {
+                                return $("#" + window.datepicker_b[window.id_widgets[i]]).val();
+                            },
+                            change: function (e) {
+                                var id = $(this).attr("id")
+                                var id_w = id.split("-")[1];
+
+                                var fecha = $("#" + window.datepicker_a[id_w]).val()
+                                var aux = fecha.split("/")
+                                var ano = aux[2]
+                                var mes = aux[1] - 1
+                                var dia = aux[0]
+                                window.fecha_inicio_consulta[id_w] = new Date(ano, mes, dia)
+                                var id_variables = window.id_variables_tablas[id_w]
+                                Enviar_Datos_Tabla(id_w, id_variables,
+                                    window.fecha_inicio_consulta[id_w], window.fecha_final_consulta[id_w])
+                            }
+                        });
+                        $("#" + window.datepicker_b[window.id_widgets[i]]).datepicker({
+                            uiLibrary: 'bootstrap4',
+                            format: 'dd/mm/yyyy',
+                            footer: true,
+                            modal: true,
+                            icons: {
+                                rightIcon: '<i style="color: rgb(255, 255, 255);" class="far fa-calendar-alt"></i>'
+                            },
+                            value: fecha_final_datepicker,
+                            maxDate: fecha_final_datepicker,
+                            minDate: function () {
+                                return $("#" + window.datepicker_a[window.id_widgets[i]]).val();
+                            },
+                            change: function (e) {
+                                var id = $(this).attr("id")
+                                var id_w = id.split("-")[1];
+
+                                var fecha = $("#" + window.datepicker_b[id_w]).val()
+                                var aux = fecha.split("/")
+                                var ano = aux[2]
+                                var mes = aux[1] - 1
+                                var dia = aux[0]
+                                window.fecha_final_consulta[id_w] = new Date(ano, mes, dia, 23, 59, 59)
+                                var id_variables = window.id_variables_tablas[id_w]
+                                Enviar_Datos_Tabla(id_w, id_variables,
+                                    window.fecha_inicio_consulta[id_w], window.fecha_final_consulta[id_w])
+                            }
+                        });
+                    }
+                }
+
+                // Funciones
+                function Enviar_Datos_Grafica(id_widget, id_variable, fecha_inicio, fecha_final) {
+                    socket.emit('Consultar-Grafica', {
+                        id_usuario: window.usuario,
+                        id_widget: id_widget,
+                        id_variable,
+                        fecha_inicio,
+                        fecha_final
+                    });
+                }
+                function Enviar_Datos_Tabla(id_widget, id_variables, fecha_inicio, fecha_final) {
+                    socket.emit('Consultar-Tabla', {
+                        id_usuario: window.usuario,
+                        id_widget: id_widget,
+                        id_variables,
+                        fecha_inicio,
+                        fecha_final
+                    });
+                }
+
+                // Combobox
+                $(document).ready(function () {
+                    $("#input-seleccion-grafica").change(function () {
+                        var valor_seleccion = document.getElementById("input-seleccion-grafica").value;
+                        var id_html = "html-grafica-" + valor_seleccion;
+
+                        var cantidad_sesiones = document.getElementsByClassName("html-graficas")
+                        cantidad_sesiones = parseInt(cantidad_sesiones.length)
+
+                        for (i = 0; i < cantidad_sesiones; i++) {
+                            document.getElementsByClassName("html-graficas")[i].style.display = "none";
+                        }
+                        document.getElementById(id_html).style.display = "block";
+                    });
+                    $(".btn-descargar-reporte").click(function () {
+                        var aux_id_widget = $(this)[0].id;
+                        var id_widget = aux_id_widget.split("-")[2];
+                        var id_variable = window.id_variables_graficas[id_widget];
+                        var nombre_variable = window.nombre_variables_widgets[id_widget];
+                        var dispositivo_variable = window.conteo_dispositivos_variables[id_variable];
+
+                        var titulo_reporte = nombre_variable + " (" + dispositivo_variable + ")";
+
+                        var combo_reporte = document.getElementById("input-reporte-" + id_widget);
+                        var valor_reporte = combo_reporte.value;
+                        if (valor_reporte == 0) {
+                            $.alert('' +
+                                '<label>Aún no has elegido que tipo de reporte deseas descargar</label>' +
+                                '<div class="text-center">' +
+                                '<i class="fas fa-times fa-4x"></i>' +
+                                '</div>');
+                            return false;
+                        }
+                        var reporte = combo_reporte.options[combo_reporte.selectedIndex].text;
+                        console.log(reporte);
+
+                        document.getElementById("spinner-reporte-" + id_widget).style.display = "block"
+
+                        socket.emit('Generar_Reporte_Variable', {
+                            id_usuario: window.usuario,
+                            id_widget,
+                            nombre_variable,
+                            id_variable,
+                            fecha_inicio: window.fecha_inicio_consulta[id_widget],
+                            fecha_final: window.fecha_final_consulta[id_widget],
+                            tipo: reporte,
+                            titulo_reporte
+                        });
+                    });
+                });
+
+                // Botones
+                $("#btn-diseñar").click(function () {
+                    window.location.href = "/panel-usuario";
+                });
+                $("#btn-cerrar-sesion").click(function () {
+                    $.post("/cerrar-sesion", function (res) {
+                        console.log(res)
+                        respuesta = res;
+                        if (respuesta == "ok")
+                            window.location.href = "/";
+                    });
+                });
+
+                const cuadro_widgets = document.querySelectorAll(".propiedad-widget");
+                const cuandoSeHaceClickWidget = function (evento) {
+                    var id = this.id.split("-");
+                    var id_w = id[1];
+                    var id_variable = window.objeto_id_variables_widgets[id_w];
+                    var id_dispositivo = window.objeto_id_dispositivos_variables[id_variable];
+                    var dispositivo = window.conteo_dispositivos_variables[id_variable];
+
+                    var clase = evento.target.className;
+                    clase = clase.split(" ");
+                    clase = clase[0];
+                    if ((clase != "slider") && (clase != id_variable) && (clase != "irs") && (clase != "irs-line")) {
+                        var variable =
+                            '<div class="text-center mt-2">' +
+                            '<span style="font-size:300%;" class="iconify" data-icon="carbon:data-view"></span>' +
+                            '</div>' +
+                            '<div class="m-0 pl-4 mt-2">' +
+                            '<h5>Mi token</h5>' +
+                            '<h6>' + window.usuario + '</h6>' +
+                            '<h5>ID dispositivo</h5>' +
+                            '<h6>' + id_dispositivo + '</h6>' +
+                            '<h5>ID variable</h5>' +
+                            '<h6>' + id_variable + '</h6>' +
+                            '</div>';
+                        var titulo = "Creada para: " + dispositivo;
+                        $.alert({
+                            title: '<h6 class="font-weight-bold m-0 mt-4">' + titulo + '</h6>',
+                            content: variable
+                        });
+                    }
+                }
+                cuadro_widgets.forEach(boton => {
+                    boton.addEventListener("click", cuandoSeHaceClickWidget);
+                });
+            </script>
+
+            <script>
+                function Cambiar_Ticks_Grafica() {
+                    var width = $(window).width();
+                    // Cambiar tamaño del titulo de ltablero
+                    if (width < 400) {
+                        document.getElementById("html-titulo-tablero").style.fontSize = "70%";
+                    } else {
+                        document.getElementById("html-titulo-tablero").style.fontSize = "85%";
+                    }
+                    for (i = 0; i < window.cantidad_graficas; i++) {
+                        if (width < 500) {
+                            window.myChart[window.conteo_id_widgets_graficas[i]].options.scales.xAxes[0].ticks.maxTicksLimit = 10;
+                            var aux_titulo_graficas = document.getElementsByClassName("html-titulo-graficas");
+                            var longitud_aux_titulo_graficas = parseInt(aux_titulo_graficas.length);
+                            for (var i = 0; i < longitud_aux_titulo_graficas; i++)
+                                document.getElementsByClassName("html-titulo-graficas")[i].style.display = "none";
+                        } else if (width < 650) {
+                            window.myChart[window.conteo_id_widgets_graficas[i]].options.scales.xAxes[0].ticks.maxTicksLimit = 15;
+                            var aux_titulo_graficas = document.getElementsByClassName("html-titulo-graficas");
+                            var longitud_aux_titulo_graficas = parseInt(aux_titulo_graficas.length);
+                            for (var i = 0; i < longitud_aux_titulo_graficas; i++)
+                                document.getElementsByClassName("html-titulo-graficas")[i].style.display = "block";
+                        } else if (width < 900)
+                            window.myChart[window.conteo_id_widgets_graficas[i]].options.scales.xAxes[0].ticks.maxTicksLimit = 20;
+                        else
+                            window.myChart[window.conteo_id_widgets_graficas[i]].options.scales.xAxes[0].ticks.maxTicksLimit = 40;
+                    }
+                }
+                // Cuando se abre el documento
+                $(document).ready(function () {
+                    Cambiar_Ticks_Grafica();
+                    var width = $(window).width();
+                    if (width < 681) {
+                        document.getElementById("btn-diseñar").innerHTML = "<span class='iconify' data-icon='akar-icons:star' style='font-size: 140%;'></span>";
+                        document.getElementById("btn-cerrar-sesion").innerHTML = "<span class='iconify' data-icon='codicon:sign-out' style='font-size: 140%;'></span>";
+                    } else {
+                        document.getElementById("btn-diseñar").innerHTML = "<span class='iconify mr-2' data-icon='akar-icons:star' style='font-size: 140%;'></span>Diseñar";
+                        document.getElementById("btn-cerrar-sesion").innerHTML = "<span class='iconify mr-2' data-icon='codicon:sign-out' style='font-size: 140%;'></span>Salir";
+                    }
+                });
+
+                // Para detectar cambio de pantalla
+                $(window).resize(function () {
+                    Cambiar_Ticks_Grafica();
+                    var width = $(window).width();
+                    if (width < 681) {
+                        document.getElementById("btn-diseñar").innerHTML = "<span class='iconify' data-icon='akar-icons:star' style='font-size: 140%;'></span>";
+                        document.getElementById("btn-cerrar-sesion").innerHTML = "<span class='iconify' data-icon='codicon:sign-out' style='font-size: 140%;'></span>";
+                    } else {
+                        document.getElementById("btn-diseñar").innerHTML = "<span class='iconify mr-2' data-icon='akar-icons:star' style='font-size: 140%;'></span>Diseñar";
+                        document.getElementById("btn-cerrar-sesion").innerHTML = "<span class='iconify mr-2' data-icon='codicon:sign-out' style='font-size: 140%;'></span>Salir";
+                    }
+                });
+            </script>
+
+            <!-- Paginacion para las tablas -->
+            <script src="js/pager-table.js"></script>
+</body>
+
+</html>

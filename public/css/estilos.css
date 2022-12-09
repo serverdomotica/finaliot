@@ -1,0 +1,695 @@
+.btn.focus,
+.btn:focus {
+    outline: 0 !important;
+    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0) !important;
+}
+.triangulo {
+    width: 0;
+    height: 0;
+    border-left: 20px solid #ffffff;
+    border-top: 20px solid rgb(255, 255, 255);
+    border-bottom: 20px solid rgb(255, 255, 255);
+}
+.btn-decrement {
+    height: 28px !important;
+    min-height: 28px !important;
+    padding: 0 !important;
+}
+.btn-increment {
+    height: 28px !important;
+    min-height: 28px !important;
+    padding: 0 !important;
+}
+.input-val {
+    height: 28px !important;
+    min-height: 28px !important;
+}
+#input-min_MP_cBdLN29i2 {
+    height: 28px !important;
+    min-height: 28px !important;
+}
+#input-max_MP_cBdLN29i2 {
+    height: 28px !important;
+    min-height: 28px !important;
+}
+
+.span-delete-evento {
+    cursor: pointer;
+}
+.span-delete-evento:hover {
+    color: #d9534f !important;
+}
+.span-delete-accion {
+    cursor: pointer;
+}
+.span-delete-accion:hover {
+    color: #d9534f !important;
+}
+
+.gj-datepicker {
+    height: 31px !important;
+}
+.btn-outline-secondary {
+    padding: 0px !important;
+}
+
+.propiedad-widget {
+    border-radius: 0.5rem;
+    box-shadow: 0 0 3px rgba(255, 255, 255, 0.5), 0 1px 2px rgba(255, 255, 255, 0.5);
+    color: rgb(237, 237, 238);
+    /* Color de la letra de los cuadros donde va la Temperatura y Conectividad*/
+    height: 150px;
+    cursor: pointer;
+}
+
+.estilo-widget {
+    background: rgb(50, 49, 54);
+}
+
+.progress {
+    background-color: #1f1f1f !important;
+}
+
+.progress-bar {
+    background: linear-gradient(
+        90deg,
+        rgba(33, 147, 176, 1) 28%,
+        rgba(109, 213, 237, 1) 100%,
+        rgba(0, 212, 255, 1) 100%
+    ) !important;
+    color: rgb(50, 49, 54) !important;
+    font-size: 140% !important;
+    font-family: lato;
+    font-weight: 900;
+}
+
+.propiedad-cuadro-mapa {
+    align-items: center;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 3px rgba(255, 255, 255, 0.5), 0 1px 2px rgba(255, 255, 255, 0.5);
+    color: rgb(237, 237, 238);
+    /* Color de la letra de los cuadros donde va la Temperatura y Conectividad*/
+    display: flex;
+    justify-content: center;
+    height: 330px;
+}
+
+.pagina-sesion {
+    background-color: rgb(240, 245, 245);
+    font-family: sans-serif;
+    font-weight: normal;
+    line-height: 1.8;
+}
+
+#fondo-inicio-sesion {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.marco-inicio-sesion {
+    width: 400px;
+    margin-top: 20px;
+    background-color: rgb(250, 250, 250);
+}
+
+.input-login {
+    border-radius: 2.5rem !important;
+}
+
+.form-sesion {
+    display: flex;
+    justify-content: center;
+}
+
+.estilo-form-control {
+    height: 42px !important;
+    width: 320px !important;
+}
+
+.buscador {
+    background-image: url("/img/buscar.png");
+    background-repeat: no-repeat;
+    background-position: 16px 10px;
+    width: 100%;
+    font-size: 16px;
+    border: 1px solid rgb(212, 212, 212);
+}
+
+.custom {
+    background: linear-gradient(90deg, rgba(82, 83, 82, 1) 19%, rgba(56, 56, 55, 1) 100%) !important;
+    border-radius: 0.5rem !important;
+    color: rgb(245, 245, 245) !important;
+    height: 47px !important;
+    letter-spacing: 1px;
+    box-shadow: 0 0 3px rgb(82, 33, 82), 0 5px 3px rgba(82, 83, 82, 0.5);
+    width: 130px !important;
+}
+
+.custom:hover {
+    background: linear-gradient(90deg, rgb(54, 54, 54) 19%, rgba(56, 56, 55, 1) 100%) !important;
+    box-shadow: 0 0 3px rgb(82, 33, 82), 0 5px 3px rgba(82, 83, 82, 0.5);
+}
+
+.pagina-panel {
+    background-color: #1f1f1f;
+    font-weight: normal;
+    /* Tipo de fuente a usar*/
+    line-height: 1.8;
+    padding: 5px;
+}
+
+.etiqueta {
+    background: rgb(50, 49, 54);
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.125), 0 1px 3px rgba(0, 0, 0, 0.2);
+    border-radius: 0.5rem;
+    padding-left: 10px;
+    text-shadow: 1px 2px rgb(255, 255, 255, 0.1);
+    text-shadow: 1px 1px 1px rgb(255, 255, 255);
+    color: rgb(190, 190, 190);
+}
+
+.propiedad-cuadro {
+    align-items: center;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 3px rgba(255, 255, 255, 0.5), 0 1px 2px rgba(255, 255, 255, 0.5);
+    color: rgb(237, 237, 238);
+    /* Color de la letra de los cuadros donde va la Temperatura y Conectividad*/
+    display: flex;
+    justify-content: center;
+    height: 170px;
+}
+
+.propiedad-cuadro2 {
+    align-items: center;
+    color: rgb(237, 237, 238);
+    /* Color de la letra de los cuadros donde va la Temperatura y Conectividad*/
+    display: flex;
+    justify-content: center;
+}
+
+.cuadro {
+    background: rgba(233, 211, 98, 0.6);
+}
+
+.cuadro2 {
+    background: rgb(50, 49, 54);
+}
+
+td {
+    width: 10px !important;
+    height: 90% !important;
+    padding: 7px !important;
+    padding-left: 15px !important;
+}
+
+.cuadro-contenido-inferior {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cuadro-medicion {
+    font-size: 200%;
+    /* Tamaño de la fuente donde van los valores de los cuadros de medicion, por ejemplo "32 C"*/
+    text-shadow: 1px 2px rgb(255, 255, 255, 0.1);
+}
+
+.cuadro-titulo1 {
+    font-size: 30px;
+    /* Tamaño de la fuente donde van los titulos de los cuadros, por ejemplo "Conectividad" y "Temperatura*/
+    text-shadow: 1px 1px 1px rgb(255, 255, 255);
+    color: rgb(224, 221, 221);
+}
+
+.cuadro-titulo2 {
+    font-size: 18px;
+    /* Tamaño de la fuente donde van los titulos de los cuadros, por ejemplo "Conectividad" y "Temperatura*/
+    text-shadow: 1px 1px 1px rgb(105, 104, 104);
+    color: rgb(233, 211, 98);
+}
+
+.cuadro-titulo3 {
+    font-size: 20px;
+    /* Tamaño de la fuente donde van los titulos de los cuadros, por ejemplo "Conectividad" y "Temperatura*/
+    text-shadow: 1px 1px 1px rgb(255, 255, 255);
+    color: rgb(224, 221, 221);
+}
+
+.cuadro-titulo4 {
+    font-size: 20px;
+    /* Tamaño de la fuente donde van los titulos de los cuadros, por ejemplo "Conectividad" y "Temperatura*/
+    text-shadow: 1px 1px 1px rgb(105, 104, 104);
+    color: rgb(233, 211, 98);
+}
+
+.input-group-btn {
+    border-radius: 1.5rem !important;
+    border-color: rgba(33, 147, 176, 1) !important;
+    font-size: 95% !important;
+    background-color: rgb(41, 40, 44) !important;
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.input-group-btn:hover {
+    border-color: #ccc !important;
+}
+.input-group-append {
+    height: 28px !important;
+}
+
+.icono {
+    font-size: 66px;
+    /* Tamaño de los iconos*/
+}
+
+.fa-times {
+    color: rgb(182, 21, 21) !important;
+}
+
+.fa-check {
+    color: rgb(41, 238, 41) !important;
+}
+
+.html-medicion {
+    color: #ccc !important;
+    font-family: lato !important;
+    font-weight: 900 !important;
+    font-size: 50px !important;
+}
+
+.btn-botones {
+    border-color: rgba(0, 212, 255, 1) !important;
+    border-radius: 2.5rem !important;
+    width: 200px !important;
+    font-family: lato !important;
+    font-weight: 900 !important;
+    font-size: 110% !important;
+    background: linear-gradient(
+        90deg,
+        rgba(33, 147, 176, 1) 28%,
+        rgba(109, 213, 237, 1) 100%,
+        rgba(0, 212, 255, 1) 100%
+    ) !important;
+    color: rgb(50, 49, 54) !important;
+}
+
+.btn-botones:hover {
+    color: rgba(0, 212, 255, 1) !important;
+    background: rgb(50, 49, 54) !important;
+}
+
+.wrunner__pathPassed_theme_default.wrunner__pathPassed {
+    background: linear-gradient(
+        90deg,
+        rgba(33, 147, 176, 1) 28%,
+        rgba(109, 213, 237, 1) 100%,
+        rgba(0, 212, 255, 1) 100%
+    ) !important;
+}
+
+.wrunner__handle_theme_default.wrunner__handle {
+    background: linear-gradient(
+        90deg,
+        rgba(33, 147, 176, 1) 28%,
+        rgba(109, 213, 237, 1) 100%,
+        rgba(0, 212, 255, 1) 100%
+    ) !important;
+}
+
+.wrunner__valueNote_theme_default.wrunner__valueNote {
+    background: linear-gradient(
+        90deg,
+        rgba(33, 147, 176, 1) 28%,
+        rgba(109, 213, 237, 1) 100%,
+        rgba(0, 212, 255, 1) 100%
+    ) !important;
+}
+
+.wrunner__division_theme_default.wrunner__division {
+    background: linear-gradient(
+        90deg,
+        rgba(33, 147, 176, 1) 28%,
+        rgba(109, 213, 237, 1) 100%,
+        rgba(0, 212, 255, 1) 100%
+    ) !important;
+}
+
+.progress {
+    background-color: #1f1f1f !important;
+}
+
+.progress-bar {
+    background: linear-gradient(
+        90deg,
+        rgba(33, 147, 176, 1) 28%,
+        rgba(109, 213, 237, 1) 100%,
+        rgba(0, 212, 255, 1) 100%
+    ) !important;
+    color: rgb(50, 49, 54) !important;
+    font-size: 140% !important;
+    font-family: lato;
+    font-weight: 900;
+}
+
+.next_link {
+    color: rgb(182, 21, 21) !important;
+    font-size: 25px;
+    padding-right: 15px;
+    padding-left: 15px;
+    border-radius: 40%;
+    border: #d6d8da;
+}
+.prev_link {
+    color: rgb(182, 21, 21) !important;
+    font-size: 25px;
+    padding-right: 15px;
+    padding-left: 15px;
+    border-radius: 40%;
+    border: #d6d8da;
+}
+
+.page_link{
+    color: #ccc !important;
+}
+
+.page_tabla {
+    font-size: 15px;
+    margin-left: 1px !important;
+    margin-right:  1px !important;
+    padding-right: 10px;
+    padding-left: 10px;
+    border-radius: 40%;
+    border: #686a6d;
+    height: 70% !important;
+}
+.page_link_active {
+    color: #e1e3e6 !important;
+    background-color: rgb(182, 21, 21) !important;
+}
+
+.container-grafica-grande {
+    align-content: center;
+    padding-left: 1%;
+    padding-right: 2%;
+    padding-top: 10px;
+    background: rgb(50, 49, 54);
+    /* Color de fondo del cuadro donde va la grafica. Animate a cambiarlo*/
+    transition: all 0.5s;
+    border-radius: 0.5rem;
+    display: -ms-flexbox;
+    min-height: 200px;
+    /* Minima altura que puede tomar el cuadro donde va la grafica*/
+    max-height: 290px;
+    /* Maxima altura que puede tomar el cuadro donde va la grafica*/
+    height: 290px;
+    /* Altura del cuadro donde va la grafica*/
+    position: relative;
+    /* Estos son como pequeños contornos hacia el extremo del cuadro donde va la grafica. Animate a jugar con ellos a ver que sale*/
+    box-shadow: 0 0 3px rgba(255, 255, 255, 0.5), 0 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+.grafico {
+    max-height: 230px;
+    /* Maxima altura que puede tomar la grafica*/
+    height: 230px;
+    /* Altura de la grafica*/
+    margin-left: auto;
+    /* El margen izquierdo lo toma automaticamente*/
+    margin-right: auto;
+    /* El margen derecho lo toma automaticamente*/
+}
+.datepicker-style {
+    background-color: rgb(50, 49, 54) !important;
+    /*Color de fondo de los datapicker*/
+    color: rgb(255, 255, 255, 1) !important;
+    /*Color de fuente dentro de los datapicker*/
+    border-radius: 0.2rem !important;
+    /*Bordes un poco redondeado*/
+}
+.picker-style {
+    background-color: rgb(50, 49, 54) !important;
+    /*Color de fondo de los datapicker*/
+    color: rgb(255, 255, 255, 1) !important;
+    /*Color de fuente dentro de los datapicker*/
+    border-radius: 0.2rem !important;
+    /*Bordes un poco redondeado*/
+    height: 28px !important;
+}
+
+.btn-descargar-reporte {
+    background: rgba(233, 211, 98, 0.6) !important;
+    color: rgb(255, 255, 255, 1) !important;
+    /*Color de fuente dentro del boton*/
+    background: linear-gradient(
+        90deg,
+        rgba(33, 147, 176, 1) 28%,
+        rgba(109, 213, 237, 1) 100%,
+        rgba(0, 212, 255, 1) 100%
+    ) !important;
+    color: rgb(50, 49, 54) !important;
+}
+
+.btn-descargar-reporte:hover {
+    background: rgb(50, 49, 54) !important;
+    color: rgb(255, 255, 255, 1) !important;
+    /*Color de fuente dentro del boton*/
+}
+
+/* The switch - the box around the slider */
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+/* Hide default HTML checkbox */
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+}
+
+input:checked + .slider {
+    background: linear-gradient(
+        90deg,
+        rgba(33, 147, 176, 1) 28%,
+        rgba(109, 213, 237, 1) 100%,
+        rgba(0, 212, 255, 1) 100%
+    ) !important;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #0275d8;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+@media (min-width: 990px) and (max-width: 1230px) {
+    .icono {
+        font-size: 54px;
+        /* Tamaño de los iconos*/
+    }
+    .cuadro-medicion {
+        font-size: 37px;
+        /* Tamño de la fuente de letra dentro del cuadro donde se muestra el valor de la medicion*/
+    }
+}
+
+@media (min-width: 400px) {
+    .pagina-sesion {
+        background: url(/img/fondo.jpg);
+        background-size: cover;
+    }
+    .marco-inicio-sesion {
+        border: rgb(82, 83, 82) 1px solid;
+        border-radius: 0.5rem;
+        box-shadow: 0 0 3px rgb(250, 250, 250), 0 5px 3px rgba(250, 250, 250, 0.5);
+    }
+}
+
+.form-signin .btn {
+    font-size: 80%;
+    border-radius: 5rem;
+    letter-spacing: 0.1rem;
+    font-weight: bold;
+    padding: 1rem;
+    transition: all 0.2s;
+}
+
+:root {
+    --input-padding-x: 1.5rem;
+    --input-padding-y: 0.75rem;
+}
+
+.card-signin {
+    border: 0;
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
+}
+
+.card-signin .card-title {
+    margin-bottom: 2rem;
+    font-weight: 300;
+    font-size: 1.5rem;
+}
+
+.card-signin .card-body {
+    padding: 2rem;
+}
+
+.form-signin {
+    width: 100%;
+}
+
+.form-signin .btn {
+    font-size: 80%;
+    border-radius: 5rem;
+    letter-spacing: 0.1rem;
+    font-weight: bold;
+    padding: 1rem;
+    transition: all 0.2s;
+}
+
+.form-label-group {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.form-label-group input {
+    height: auto;
+    border-radius: 2rem;
+}
+
+.form-label-group > input,
+.form-label-group > label {
+    padding: var(--input-padding-y) var(--input-padding-x);
+}
+
+.form-label-group > label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    margin-bottom: 0;
+    /* Override default `<label>` margin */
+    line-height: 1.5;
+    color: #495057;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+    transition: all 0.1s ease-in-out;
+}
+
+.form-label-group input::-webkit-input-placeholder {
+    color: transparent;
+}
+
+.form-label-group input:-ms-input-placeholder {
+    color: transparent;
+}
+
+.form-label-group input::-ms-input-placeholder {
+    color: transparent;
+}
+
+.form-label-group input::-moz-placeholder {
+    color: transparent;
+}
+
+.form-label-group input::placeholder {
+    color: transparent;
+}
+
+.form-label-group input:not(:placeholder-shown) {
+    padding-top: calc(var(--input-padding-y) + var(--input-padding-y) * (2 / 3));
+    padding-bottom: calc(var(--input-padding-y) / 3);
+}
+
+.form-label-group input:not(:placeholder-shown) ~ label {
+    padding-top: calc(var(--input-padding-y) / 3);
+    padding-bottom: calc(var(--input-padding-y) / 3);
+    font-size: 12px;
+    color: #777;
+}
+
+/* Fallback for Edge
+-------------------------------------------------- */
+
+@supports (-ms-ime-align: auto) {
+    .form-label-group > label {
+        display: none;
+    }
+    .form-label-group input::-ms-input-placeholder {
+        color: #777;
+    }
+}
+
+/* Fallback for IE
+-------------------------------------------------- */
+
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    .form-label-group > label {
+        display: none;
+    }
+    .form-label-group input:-ms-input-placeholder {
+        color: #777;
+    }
+}
+
+@media (max-width: 430px) {
+    .gj-picker {
+        width: 300px !important;
+    }
+    .other-month {
+        padding: 4px !important;
+        margin: 4px !important;
+    }
+    .current-month {
+        padding: 4px !important;
+        margin: 4px !important;
+    }
+}

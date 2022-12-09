@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Registro widget</title>
+
+    <%- include ('partials/head.html'); -%>
+
+        <!--IMPORTAR Socket.iot para trabajar con comunicacion socket-->
+        <script src="/socket.io/socket.io.js" charset="utf-8"></script>
+</head>
+
+<body class="pagina-registro">
+
+    <div class="container" style="height: 100%;">
+        <div class="row" style="height: 100%;">
+            <div class="col-sm-11 col-md-9 col-lg-9 mx-auto my-auto">
+                <div class="card card-signin">
+                    <div class="card-body">
+
+                        <div class="text-center">
+                            <img src="/logos/<%= datos.logo %>" height="100px" width="250px">
+                        </div>
+
+                        <H2 class="text-center mt-4 mb-2"> Registrar widget</H2>
+
+                        <div id="spinner" style="display: none;">
+                            <div class="d-flex justify-content-center">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form class="form-signin">
+                            <div class="row m-0">
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-4">
+                                    <div class="form-label-group">
+                                        <input type="text" id="input-nombre" class="form-control" placeholder=""
+                                            required autofocus>
+                                        <label for="input-nombre">Nombre</label>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-12 px-4">
+                                    <label>Tipo</label>
+                                    <select id="input-tipo" class='mi-selector' style="width: 100%;"
+                                        onchange="Funcion_Tipo()">
+                                        <option value='0' selected>...</option>
+                                        <option value='1' selected>Texto</option>
+                                        <option value='2' selected>Interruptor</option>
+                                        <option value='3' selected>Deslizador</option>
+                                        <option value='4' selected>Grafico_linea</option>
+                                        <option value='5' selected>Tabla</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-12 px-4 mt-4 html-variable">
+                                    <label>Variable</label>
+                                    <select id="input-variable" class='mi-selector' style="width: 100%;">
+                                        <option value='0' selected>...</option>
+                                        <% for(var i=0; i < cantidad_variables; i++) { %>
+                                            <option value=<%=id_variables[i] %>><%= variables[i] %> (
+                                                    <%=dispositivos_variables[i]%>)</option>
+                                            <% } %>
+                                    </select>
+                                </div>
+
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-6 px-4 mt-4 html-opciones-valores"
+                                    style="display :none;">
+                                    <label>Valor minimo</label>
+                                    <input id="input-min" type="number" value="0.0" data-decimals="1" step="0.1" />
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-6 px-4 mt-4 html-opciones-valores"
+                                    style="display: none;">
+                                    <label>Valor maximo</label>
+                                    <input id="input-max" type="number" value="1.0" data-decimals="1" step="0.1" />
+                                </div>
+
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-4 px-4 html-opciones-funcion">
+                                    <label>Función</label>
+                                    <select id="input-funcion" class='mi-selector' style="width: 100%;">
+                                        <option value='0' selected>...</option>
+                                        <option value='1'>Monitorear</option>
+                                        <option value='2'>Controlar</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-4 html-opciones-interruptor"
+                                    style="display: none;">
+                                    <div class="form-label-group">
+                                        <input type="text" id="input-msj-off" class="form-control" placeholder=""
+                                            required autofocus>
+                                        <label for="input-msj-off">Mensaje para OFF</label>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2 html-opciones-interruptor"
+                                    style="display: none;">
+                                    <div class="form-label-group">
+                                        <input type="text" id="input-msj-on" class="form-control" placeholder=""
+                                            required autofocus>
+                                        <label for="input-msj-on">Mensaje para ON</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-4 px-4 html-estancias">
+                                    <label>Selecciona la estancia (Opcional)</label>
+                                    <select id="input-estancia" class='mi-selector' style="width: 100%;">
+                                        <% for(var i=0; i < cantidad_estancias; i++) { %>
+                                            <option value=<%=id_estancias[i] %>><%= estancias[i] %></option>
+                                            <% } %>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div class="html-sesion-tabla1" style="display: none; width: 100%;">
+                            <div id="html-sesion-tabla2">
+                                <div class="row row-columnas-tabla m-0">
+                                    <div class="col-12 col-sm-12 col-md-5 col-lg-5 px-4 mt-4">
+                                        <label>C1: Titulo</label>
+                                        <div class="form-label-group" style="width: 100%;">
+                                            <input type="text" id="input-columna-tabla-0" class="form-control"
+                                                placeholder="" required autofocus style="height: 28px !important;">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 px-4 mt-0 mt-lg-4 mt-md-4">
+                                        <label>Variable</label>
+                                        <select id="input-variable-tabla-0" class="mi-selector" style="width: 100%;">
+                                            <option value='0' selected>...</option>
+                                            <% for(var i=0; i < cantidad_variables; i++) { %>
+                                                <option value=<%=id_variables[i] %>><%= variables[i] %> (
+                                                        <%=dispositivos_variables[i]%>)</option>
+                                                <% } %>
+                                        </select>
+                                    </div>
+                                    <div
+                                        class="col-12 col-sm-12 col-md-1 col-lg-1 px-1 mt-1 mt-md-5 mt-lg-5 text-center">
+                                        <div class="btn-eliminar-tabla mt-1">
+                                            <span id="span-tabla-0" style="font-size: 30px !important;"
+                                                class="iconify ml-3 span-delete-accion mt-1" data-icon="mi:delete"
+                                                onclick="Funcion_Delete_Tabla(this)"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-center mt-4 mb-3">
+                                <button id="btn-añadir-tabla" type="button" class="btn btn-primary btn-sm"
+                                    style="border-radius: 5rem;  transition: all 0.2s; width: 140px;">
+                                    <span class='iconify mr-1' data-icon='fluent:add-12-filled'
+                                        style='font-size: 100%;'></span>
+                                    Añadir columna
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-center mt-4 mb-3">
+                            <button id="btn-volver" type="button" class="btn btn-danger btn-lg mr-3 mr-lg-5 px-4"
+                                style="border-radius: 5rem;  transition: all 0.2s;">Regresar</button>
+                            <button id="btn-aceptar" type="button" class="btn btn-danger btn-lg ml-3 ml-lg-5 px-4"
+                                style="border-radius: 5rem;  transition: all 0.2s;">Aceptar</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include ('partials/footer.html'); -%>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
+        <script src="/js/bootstrap-input-spinner.js"></script>
+
+        <script>
+            $("input[type='number']").inputSpinner()
+
+            // Declaracion de variables
+            window.usuario = "<%= datos.id %>"
+
+            document.getElementById("input-tipo").value = "0"
+            document.getElementById("input-variable").value = "0"
+            document.getElementById("input-msj-off").value = ""
+            document.getElementById("input-msj-on").value = ""
+            document.getElementById("input-funcion").value = "0"
+
+            window.cantidad_val = 0;
+
+            // Crear cliente socket
+            const socket = io({
+                autoConnect: true
+            });
+
+            function Funcion_Tipo() {
+                var texto_tipo = $("#input-tipo").find('option:selected').text();
+                document.getElementsByClassName("html-opciones-interruptor")[0].style.display = "none";
+                document.getElementsByClassName("html-opciones-interruptor")[1].style.display = "none";
+                document.getElementsByClassName("html-opciones-valores")[0].style.display = "none";
+                document.getElementsByClassName("html-opciones-valores")[1].style.display = "none";
+                document.getElementsByClassName("html-opciones-funcion")[0].style.display = "block";
+                document.getElementsByClassName("html-estancias")[0].style.display = "block";
+                document.getElementsByClassName("html-variable")[0].style.display = "block";
+                document.getElementsByClassName("html-sesion-tabla1")[0].style.display = "none";
+
+                if (texto_tipo == "Texto") {
+                    document.getElementsByClassName("html-opciones-funcion")[0].style.display = "none";
+                } else if (texto_tipo == "Interruptor") {
+                    document.getElementsByClassName("html-opciones-interruptor")[0].style.display = "block";
+                    document.getElementsByClassName("html-opciones-interruptor")[1].style.display = "block";
+                } else if (texto_tipo == "Deslizador") {
+                    document.getElementsByClassName("html-opciones-valores")[0].style.display = "block";
+                    document.getElementsByClassName("html-opciones-valores")[1].style.display = "block";
+                } else if (texto_tipo == "Grafico_linea") {
+                    document.getElementsByClassName("html-opciones-funcion")[0].style.display = "none";
+                    document.getElementsByClassName("html-estancias")[0].style.display = "none";
+                } else if (texto_tipo == "Tabla") {
+                    document.getElementsByClassName("html-opciones-funcion")[0].style.display = "none";
+                    document.getElementsByClassName("html-sesion-tabla1")[0].style.display = "block";
+                    document.getElementsByClassName("html-variable")[0].style.display = "none";
+                }
+            }
+
+            // Eliminar una columna de una tabla
+            function Funcion_Delete_Tabla(dato) {
+                var aux_id = dato.id;
+                var id = aux_id.split("-")[2];
+                console.log("Funcion delete", id)
+
+                document.getElementsByClassName("row-columnas-tabla")[id].style.display = "none";
+                return false;
+
+                var cantidad = 0;
+                var aux_cantidad = parseInt(document.getElementsByClassName("row-eventos").length);
+                for (var i = 0; i < aux_cantidad; i++) {
+                    if (document.getElementsByClassName("row-eventos")[i].style.display != "none") {
+                        cantidad = cantidad + 1;
+                    }
+                }
+
+                if (cantidad == 1) {
+                    document.getElementById("btn-and").style.display = "block";
+                    document.getElementById("btn-or").style.display = "block";
+                }
+            }
+
+            $(document).ready(function () {
+
+                jQuery(document).ready(function ($) {
+                    $(document).ready(function () {
+                        $('.mi-selector').select2();
+                    });
+                });
+
+                $("#btn-volver").click(function () {
+                    window.location.href = "/panel-usuario";
+                });
+
+                $("#btn-añadir-tabla").click(function () {
+                    window.cantidad_val = window.cantidad_val + 1;
+                    var aux = window.cantidad_val + 1;
+                    $('#html-sesion-tabla2').append('<div class="row row-columnas-tabla m-0">' +
+                        '<div class="col-12 col-sm-12 col-md-5 col-lg-5 px-4 mt-4">' +
+                        '<label>C' + aux + ': Titulo</label>' +
+                        '<div class="form-label-group" style="width: 100%;">' +
+                        '<input type="text" id="input-columna-tabla-' + window.cantidad_val + '" class="form-control"' +
+                        'placeholder="" required autofocus style="height: 28px !important;">' +
+                        '</div>' +
+                        '</div>' +
+                        '<div class="col-12 col-sm-12 col-md-6 col-lg-6 px-4 mt-0 mt-lg-4 mt-md-4">' +
+                        '<label>Variable</label>' +
+                        '<select id="input-variable-tabla-' + window.cantidad_val + '" class="mi-selector" style="width: 100%;">' +
+                        '<option value="0" selected>...</option>' +
+                        '<% for(var i=0; i < cantidad_variables; i++) { %>' +
+                        '<option value=<%=id_variables[i] %>><%= variables[i] %> (' +
+                        '<%=dispositivos_variables[i]%>)</option>' +
+                        '<% } %>' +
+                        '</select>' +
+                        '</div>' +
+                        '<div' +
+                        ' class="col-12 col-sm-12 col-md-1 col-lg-1 px-1 mt-1 mt-md-5 mt-lg-5 text-center">' +
+                        '<div class="btn-eliminar-tabla mt-1">' +
+                        '<span id="span-tabla-' + window.cantidad_val + '" style="font-size: 30px !important;"' +
+                        'class="iconify ml-3 span-delete-accion mt-1" data-icon="mi:delete"' +
+                        'onclick="Funcion_Delete_Tabla(this)"></span>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>');
+                    $(document).ready(function () {
+                        $('.mi-selector').select2();
+                    });
+                });
+
+                $("#btn-aceptar").click(function () {
+                    var aux_tipo = document.getElementById("input-tipo").value;
+                    var tipo = $("#input-tipo").find('option:selected').text();
+                    var nombre = document.getElementById("input-nombre").value;
+                    var id_variable = document.getElementById("input-variable").value;
+                    var variable = $("#input-variable").find('option:selected').text();
+                    var min = document.getElementById("input-min").value;
+                    var max = document.getElementById("input-max").value;
+                    var msj_off = document.getElementById("input-msj-off").value;
+                    var msj_on = document.getElementById("input-msj-on").value;
+                    var funcion = $("#input-funcion").find('option:selected').text();
+                    var id_estancia = document.getElementById("input-estancia").value;
+                    var estancia = $("#input-estancia").find('option:selected').text();
+                    var c=0;
+                    if (aux_tipo == 0) {
+                        $.alert('' +
+                            '<label>Tienes que seleccionar un tipo de widget</label>' +
+                            '<div class="text-center">' +
+                            '<i class="fas fa-times fa-4x"></i>' +
+                            '</div>');
+                        return false;
+                    }
+                    if (nombre.length == 0) {
+                        $.alert('' +
+                            '<label>El nombre del widget no puede ser nulo</label>' +
+                            '<div class="text-center">' +
+                            '<i class="fas fa-times fa-4x"></i>' +
+                            '</div>');
+                        return false;
+                    }
+                    if ((id_variable == 0) && (tipo != "Tabla")) {
+                        $.alert('' +
+                            '<label>Tienes que seleccionar una variable para el widget</label>' +
+                            '<div class="text-center">' +
+                            '<i class="fas fa-times fa-4x"></i>' +
+                            '</div>');
+                        return false;
+                    }
+                    if ((tipo != "Grafico_linea") && (tipo != "Tabla")) {
+                        if (funcion.length == 0) {
+                            $.alert('' +
+                                '<label>Tienes que seleccionar una función para el widget</label>' +
+                                '<div class="text-center">' +
+                                '<i class="fas fa-times fa-4x"></i>' +
+                                '</div>');
+                            return false;
+                        }
+                    }
+
+                    var columnas_tabla = "";
+                    if (tipo == "Tabla") {
+                        // Columnas
+                        var aux_columnas = parseInt(document.getElementsByClassName("row-columnas-tabla").length);
+                        for (var i = 0; i < aux_columnas; i++) {
+                            if (document.getElementsByClassName("row-columnas-tabla")[i].style.display != "none") {
+                                // Nombre de columna
+                                var id_nombre_columna_tabla = "input-columna-tabla-" + i;
+                                var aux_tabla_html1 = document.getElementById(id_nombre_columna_tabla);
+                                aux_tabla_html1 = aux_tabla_html1.value;
+                                // Variable de la columna
+                                var id_variable_columna_tabla = "input-variable-tabla-" + i;
+                                var aux_tabla_html2 = document.getElementById(id_variable_columna_tabla);
+                                aux_tabla_html2 = aux_tabla_html2.value;
+                                columnas_tabla = columnas_tabla + '*{"nombre_col":"' + aux_tabla_html1 + '","id_variable":"' + aux_tabla_html2 + '"}';
+                            }
+                        }
+                    }
+                    console.log(columnas_tabla)
+
+                    var mensaje = '¿Deseas registrar el widget ' + nombre + ' del tipo ' + tipo + '?';
+
+                    if (tipo != "Tabla") {
+                        aux_variable = variable.split(' ');
+                        variable = aux_variable[0];
+                    } else {
+                        id_variable = 0;
+                        variable = columnas_tabla;
+                    }
+
+                    // Ahorro de bd
+                    if (tipo == "Texto") {
+                        msj_off = "";
+                        msj_on = "";
+                        funcion = "Monitorear"
+                    } else if (tipo == "Deslizador") {
+                        msj_off = "";
+                        msj_on = "";
+                    } else if (tipo == "Grafico_Linea"){
+                        msj_off = "";
+                        msj_on = "";
+                        funcion = ""
+                    } else if (tipo == "Tabla") {
+                        funcion = "Monitorear";
+                    }
+
+                    $.confirm({
+                        title: 'Confimar',
+                        content: mensaje,
+                        buttons: {
+                            Si: function () {
+                                document.getElementById("spinner").style.display = "block"
+
+                                $.post("/datos-registro-bd", {
+                                    nombre,
+                                    tipo,
+                                    id_variable,
+                                    variable,
+                                    min,
+                                    max,
+                                    funcion,
+                                    id_estancia,
+                                    estancia,
+                                    msj_off,
+                                    msj_on,
+                                    bd: "widgets"
+                                }, function (res) {
+                                    console.log(res)
+                                    var respuesta = res;
+                                    if (respuesta == "Ya existe")
+                                        $.alert('' +
+                                            '<label>El nombre del widget ya existe</label>' +
+                                            '<div class="text-center">' +
+                                            '<i class="fas fa-times fa-4x"></i>' +
+                                            '</div>');
+                                    else if (respuesta == "Error") {
+                                        $.alert('' +
+                                            '<label>Error al registrar</label>' +
+                                            '<div class="text-center">' +
+                                            '<i class="fas fa-times fa-4x"></i>' +
+                                            '</div>');
+                                    } else {
+                                      var arrayDeCadenas = respuesta.split("/");
+                                      firebase.database().ref('widgets/'+arrayDeCadenas[0]).set({
+                                        id_usuario:arrayDeCadenas[1],
+                                        nombre:arrayDeCadenas[2],
+                                        tipo:arrayDeCadenas[3],
+                                        id_variable:arrayDeCadenas[4],
+                                        variable:arrayDeCadenas[5],
+                                        titulos_tabla:arrayDeCadenas[6],
+                                        id_variables_tabla:arrayDeCadenas[7],
+                                        min:arrayDeCadenas[8],
+                                        max:arrayDeCadenas[9],
+                                        msj_off:arrayDeCadenas[10],
+                                        msj_on:arrayDeCadenas[11],
+                                        funcion:arrayDeCadenas[12],
+                                        id_estancia:arrayDeCadenas[13],
+                                        estancia:arrayDeCadenas[14]
+
+                                      });
+
+
+                                      const refHosp12=firebase.database().ref();
+                                      const datosMostrar12=[];
+                                      const datosMostrar13=[];
+
+                                      refHosp12.on("value",function(snapshot){
+                                        var datosF12=snapshot.val();
+
+                                        for (var key12 in datosF12) {
+                                            datosMostrar12.push(datosF12["cantidad"]);
+                                            datosMostrar13.push(key12);
+                                        }
+                                        console.log(datosF12["cantidad"]);
+                                        var ca=0;
+                                        ca=datosF12["cantidad"]+1;
+                                        if(c<1){
+                                          c++;
+                                          firebase.database().ref().update({
+                                            cantidad:ca
+                                          });
+                                          firebase.database().ref('cambio/'+"wi"+ca).set({
+                                            id_widgets:arrayDeCadenas[0],
+                                            val:0,
+                                            id_variable:arrayDeCadenas[4],
+                                            mensaje:" Dispositivo",
+                                            titulo:"no vio notificacion",
+                                            notificacion:0
+
+                                          });
+                                        }
+                                      });
+                                      /*firebase.database().ref('cantidad').set({
+                                        id_variable:arrayDeCadenas[4]
+                                      });*/
+                                        $("#input-tipo").val("0").trigger("change");
+                                        $("#input-variable").val("0").trigger("change");
+                                        document.getElementById("input-msj-off").value = ""
+                                        document.getElementById("input-msj-on").value = ""
+                                        $("#input-funcion").val("0").trigger("change");
+                                        $.alert('' +
+                                            '<label>Widget registrado exitosamente.' +
+                                            '</label>' +
+                                            '<div class="text-center">' +
+                                            '<i class="fas fa-check fa-4x"></i>' +
+                                            '</div>');
+                                    }
+                                }).done(function () {
+                                    document.getElementById("spinner").style.display = "none"
+                                });
+                            },
+                            No: function () { },
+                        }
+                    });
+                });
+            });
+        </script>
+
+        <script>
+            $(document).ready(function () {
+                var height = $(window).height();
+                $('.pagina-registro').height(height);
+            });
+
+            // Para detectar cambio de pantalla
+            $(window).resize(function () {
+                var height = $(window).height();
+                $('.pagina-registro').height(height);
+            });
+        </script>
+
+</body>
+
+</html>

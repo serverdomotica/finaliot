@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Eventos registrados</title>
+
+    <%- include ('partials/head.html'); -%>
+
+        <script src="/socket.io/socket.io.js" charset="utf-8"></script>
+        <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
+        <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="pagina-panel pt-2">
+
+    <div class="etiqueta mx-3 mt-2">
+        <div class="row">
+            <div class="col-7 col-sm-7 col-md-6 col-lg-8">
+                <h2 class="mx-3 pt-2 pb-1 text-white">
+                    <span id="icono-titulo" style="font-size: 80%;" class="iconify" data-icon="carbon:event"></span>
+                    <spam id="html-titulo" style="font-size: 85%;" class="mx-2"></spam>
+                </h2>
+            </div>
+            <div class="col-5 col-sm-5 col-md-6 col-lg-4 my-auto">
+                <div class="d-flex justify-content-end py-auto pr-3">
+                    <button id="btn-volver" type="button" class="btn btn-danger px-3 mr-3"
+                        style="border-radius: 5rem;  transition: all 0.2s;">
+                    </button>
+                    <button id="btn-cerrar-sesion" type="button" class="btn btn-danger px-3"
+                        style="border-radius: 5rem;  transition: all 0.2s;">
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="spinner" class="mt-3" style="display: none;">
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="mx-0 mt-4">
+        <div class="row m-0">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-4">
+                <div class="table-responsive mb-2 px-sm-5 px-4">
+                    <table class="table table-bordered table-dark mt-2">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="text-align: center; display: none;"></th>
+                                <th scope="col" style="text-align: center;">Condiciones</th>
+                                <th scope="col" style="text-align: center;">Acciones</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="tabla">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center" style="width: 100%; margin-top: -30px;">
+            <ul class="pagination pager justify-content-center" id="myPager"></ul>
+        </div>
+
+    </div>
+
+    <%- include ('partials/footer.html'); -%>
+        <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+
+        <script>
+            window.usuario = "<%= datos.id %>"
+            var id_variables = "<%= id_variables %>"
+            var variables = "<%= variables %>"
+            var dispositivos_variables = "<%= dispositivos_variables %>"
+
+            id_variables = id_variables.split(',');
+            variables = variables.split(',');
+            dispositivos_variables = dispositivos_variables.split(',');
+
+            window.nombres_variables = {};
+            var cantidad = parseInt(id_variables.length)
+            for (var i = 0; i < cantidad; i++) {
+                window.nombres_variables[id_variables[i]] = variables[i] + "(" + dispositivos_variables[i] + ")";
+                console.log(window.nombres_variables[id_variables[i]])
+            }
+
+            // Crear cliente socket
+            const socket = io({
+                autoConnect: true
+            });
+
+            // Conexion socket con el servidor
+            socket.on('connect', () => {
+                socket.emit('Consulta', window.usuario, "eventos", 0, 0)
+            });
+
+            // Recepcion de datos a traves de sockets
+            socket.on('Eventos', function (final_trama, datos) {
+                if (datos) {
+                    console.log("Registro:", datos)
+
+                    var anidacion = datos.anidacion;
+                    if (anidacion == 0) {
+                        anidacion = "AND"
+                    } else {
+                        anidacion = "OR"
+                    }
+
+                    var condiciones = datos.condicionales;
+                    var cantidad_condiciones = parseInt(condiciones.length);
+                    var texto_condiciones = "";
+                    for (var i = 0; i < cantidad_condiciones; i++) {
+                        var id_variable = condiciones[i].id_variable;
+                        var tipo = condiciones[i].tipo;
+                        if (tipo == 0) tipo = "==";
+                        else if (tipo == 1) tipo = "!="
+                        else if (tipo == 2) tipo = ">"
+                        else if (tipo == 3) tipo = "<"
+                        var valor = condiciones[i].val_id_variable;
+                        if (valor == 0) {
+                            valor = condiciones[i].val;
+                        } else {
+                            valor = window.nombres_variables[valor];
+                        }
+
+                        if (i == 0) {
+                            texto_condiciones = "<h6 class='mt-2'>Si " + "<spam style='color: aqua;'>" + window.nombres_variables[id_variable] + "</spam>" + " " + tipo + " " + "<spam style='color: rgb(171, 206, 47);'>" + valor + "</spam>" + "</h6 > ";
+                        } else {
+                            texto_condiciones = texto_condiciones + "<h6 class='mt-2'>" + anidacion + "<spam style='color: aqua;'> " + window.nombres_variables[id_variable] + "</spam>" + " " + tipo + " " + "<spam style='color: rgb(171, 206, 47);'>" + valor + "</spam>" + "</h6 > ";
+                        }
+                    }
+
+                    var acciones = datos.acciones;
+                    var cantidad_acciones = parseInt(acciones.length);
+                    var texto_acciones = "";
+                    for (var i = 0; i < cantidad_acciones; i++) {
+                        var tipo = acciones[i].tipo;
+                        if (tipo == 0) {
+                            var titulo = acciones[i].titulo;
+                            var contenido = acciones[i].contenido;
+                            var tiempo = acciones[i].tiempo;
+                            texto_acciones = texto_acciones + "<h6 class='mt-2'>" + "<spam style='color: rgb(47, 206, 60);'>Notificación:</spam>" + " Titulo '" + titulo + "' Contenido '" + contenido + "' Periodo Tiempo '" + tiempo + " m'" + "</h6>";
+                        }
+                        if (tipo == 1) {
+                            var id_variable = acciones[i].id_variable;
+                            var val = acciones[i].val;
+                            texto_acciones = texto_acciones + "<h6 class='mt-2'>" + "<spam style='color: rgb(47, 206, 60);'>Control:</spam>" + " '" + "<spam style='color: rgb(0, 204, 255);'>" + window.nombres_variables[id_variable] + "</spam>" + "' = '" + val + "'" + "</h6>";
+                        }
+                    }
+
+                    console.log(texto_condiciones, texto_acciones)
+
+                    var fila = "<tr>" +
+                        "<td style='text-align: center; display: none;'>" + datos.id + "</td>" +
+                        "<td style='text-align: center;'>" + texto_condiciones + "</td>" +
+                        "<td style='text-align: center;'>" + texto_acciones + "</td>" +
+                        "<td style='text-align:center; vertical-align:middle; width: 100px !important;'><input type='button' class='btn btn-danger btn-sm btn-borrar pl-3' value='Borrar'/></td>" +
+                        "</tr>"
+
+                    var btn = document.createElement("TR");
+                    btn.innerHTML = fila;
+                    document.getElementById("tabla").appendChild(btn);
+
+                    if (final_trama == 1) {
+                        $('#tabla').pageMe({
+                            pagerSelector: '#myPager',
+                            showPrevNext: true,
+                            hidePageNumbers: false,
+                            perPage: 10
+                        });
+                    }
+                }
+            });
+
+            // LEER BOTONES
+            $("#btn-volver").click(function () {
+                window.location.href = "/panel-usuario";
+            });
+            $("#btn-cerrar-sesion").click(function () {
+                $.post("/cerrar-sesion", function (res) {
+                    console.log(res)
+                    if (res == "ok")
+                        window.location.href = "/";
+                });
+            });
+
+            $(document).on('click', '.btn-borrar', function (event) {
+                event.preventDefault();
+                var item = $(this).closest('tr')
+
+                $.confirm({
+                    title: 'Confimar',
+                    content: "¿Estas seguro de borrar el evento de la base de datos?",
+                    buttons: {
+                        Si: function () {
+                            document.getElementById("spinner").style.display = "block"
+                            var id;
+                            $tds = item.find("td:nth-child(1)");
+                            $.each($tds, function () {
+                                id = $(this).text();
+                            });
+                            console.log("Eliminar:", id)
+                            $.post("/eliminar-registro-bd", {
+                                bd: "eventos",
+                                id
+                            }, function (res) {
+                                console.log(res)
+                                respuesta = res;
+                                if (respuesta == "Eliminado") {
+
+                                  firebase.database().ref('eventos/'+id).remove();
+
+                                    $.alert('' +
+                                        '<label>Evento eliminado exitosamente</label>' +
+                                        '<div class="text-center">' +
+                                        '<i class="fas fa-check fa-4x"></i>' +
+                                        '</div>');
+                                    item.remove();
+                                }
+                                if (respuesta == "Error") {
+                                    $.alert('' +
+                                        '<label>Error al eliminar</label>' +
+                                        '<div class="text-center">' +
+                                        '<i class="fas fa-times fa-4x"></i>' +
+                                        '</div>');
+                                }
+                            }).done(function () {
+                                document.getElementById("spinner").style.display = "none"
+                            });
+                        },
+                        No: function () { },
+                    }
+                });
+            });
+        </script>
+
+        <script>
+            function Diseno_Botones() {
+                var width = $(window).width();
+                if (width < 681) {
+                    document.getElementById("btn-volver").innerHTML = "<span class='iconify' data-icon='akar-icons:arrow-back-thick' style='font-size: 140%;'></span>";
+                    document.getElementById("btn-cerrar-sesion").innerHTML = "<span class='iconify' data-icon='codicon:sign-out' style='font-size: 140%;'></span>";
+                } else {
+                    document.getElementById("btn-volver").innerHTML = "<span class='iconify mr-2' data-icon='akar-icons:arrow-back-thick' style='font-size: 140%;'></span>Menú";
+                    document.getElementById("btn-cerrar-sesion").innerHTML = "<span class='iconify mr-2' data-icon='codicon:sign-out' style='font-size: 140%;'></span>Salir";
+                }
+                if (width < 480) {
+                    document.getElementById("html-titulo").innerHTML = "Eventos"
+                    document.getElementById("html-titulo").style.fontSize = "50%";
+                    document.getElementById("icono-titulo").style.fontSize = "80%";
+                } else {
+                    document.getElementById("html-titulo").innerHTML = "Eventos"
+                    document.getElementById("html-titulo").style.fontSize = "85%";
+                    document.getElementById("icono-titulo").style.fontSize = "100%";
+                }
+            }
+            // Cuando se abre el documento
+            $(document).ready(function () {
+                Diseno_Botones();
+            });
+
+            // Para detectar cambio de pantalla
+            $(window).resize(function () {
+                Diseno_Botones();
+            });
+        </script>
+
+        <!-- Paginacion para las tablas -->
+        <script src="js/pager-table.js"></script>
+
+</body>
+
+</html>

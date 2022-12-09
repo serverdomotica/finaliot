@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Login</title>
+
+    <%- include ('partials/head.html'); -%>
+</head>
+
+<body class="pantalla-centrada">
+
+    <div class="container" style="height: 100%;">
+        <div class="row" style="height: 100%;">
+            <div class="col-sm-9 col-md-7 col-lg-5 mx-auto my-auto">
+                <div class="card card-signin">
+                    <div class="card-body">
+
+                        <div class="text-center">
+                            <img src="/logos/logo.png" height="100px" width="250px">
+                        </div>
+
+                        <H2 class="text-center mt-4 mb-2">Iniciar sesión</H2>
+
+                        <div id="spinner" class="mb-3" style="display: none;">
+                            <div class="d-flex justify-content-center">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form class="form-signin mt-4">
+                            <div class="form-label-group">
+                                <input type="text" id="input-user" class="form-control" placeholder="" required autofocus>
+                                <label for="input-user">Usuario</label>
+                            </div>
+
+                            <div class="form-label-group">
+                                <input type="password" id="input-clave" class="form-control" placeholder="" required>
+                                <label for="input-clave">Contraseña</label>
+                            </div>
+
+                            <button id="btn-login" class="btn btn-lg btn-danger btn-block text-uppercase" type="button">Iniciar
+                sesión</button>
+                            <hr class="my-4">
+                            <button id="btn-admin" class="btn btn-lg btn-block text-uppercase p-1" type="button">
+                <i class="fas fa-chevron-circle-right"></i>
+                Administrador</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include ('partials/footer.html'); -%>
+
+        <script>
+            $(document).ready(function() {
+
+                $("#btn-admin").click(function() {
+                    $.confirm({
+                        title: 'Permiso',
+                        content: '' +
+                            '<form action="" class="formName">' +
+                            '<div class="form-group">' +
+                            '<label>Ingrese clave de administrador</label>' +
+                            '<input type="text" placeholder="Clave" class="clave_admin form-control" required />' +
+                            '</div>' +
+                            '</form>',
+                        buttons: {
+                            formSubmit: {
+                                text: 'Aceptar',
+                                btnClass: 'btn-blue',
+                                action: function() {
+                                    var clave_admin = this.$content.find('.clave_admin').val();
+                                    $.post("/login-admin", {
+                                        username: "admin",
+                                        password: clave_admin
+                                    }, function(res) {
+                                        console.log(res)
+                                        respuesta = res;
+                                        if (respuesta != "fallo")
+                                            window.location.href = res;
+                                        else {
+                                            $.alert('' +
+                                                '<label>Clave incorrecta</label>' +
+                                                '<div class="text-center">' +
+                                                '<i class="fas fa-times fa-4x"></i>' +
+                                                '</div>');
+                                        }
+                                    });
+                                }
+                            },
+                            Cancelar: {},
+                        },
+                        onContentReady: function() {
+                            var jc = this;
+                            this.$content.find('form').on('submit', function(e) {
+                                e.preventDefault();
+                                jc.$$formSubmit.trigger('click');
+                            });
+                        }
+                    });
+                });
+
+                $("#btn-login").click(function() {
+                    var user = document.getElementById("input-user").value;
+                    var clave = document.getElementById("input-clave").value;
+                    console.log(user, clave)
+                    document.getElementById("spinner").style.display = "block";
+                    const refase=firebase.database().ref().child("usuarios");
+                    refase.on("value",function(snapshot){
+                      var datosFB=snapshot.val();
+                      console.log(datosFB);
+                    });
+                    $.post("/login-usuario", {
+                        username: user,
+                        password: clave
+                    }, function(res) {
+                        console.log(res)
+                        respuesta = res;
+                        if (respuesta == "cierto")
+                            window.location.href = "/tablero";
+                        else
+                            $.alert('' +
+                                '<label>' + respuesta + '</label>' +
+                                '<div class="text-center">' +
+                                '<i class="fas fa-times fa-4x"></i>' +
+                                '</div>');
+                    }).done(function() {
+                        document.getElementById("spinner").style.display = "none";
+                    });
+                });
+
+            });
+        </script>
+
+        <script>
+            $(document).ready(function() {
+                var height = $(window).height();
+                $('.pantalla-centrada').height(height);
+            });
+
+            // Para detectar cambio de pantalla
+            $(window).resize(function() {
+                var height = $(window).height();
+                $('.pantalla-centrada').height(height);
+            });
+        </script>
+
+
+</body>
+
+</html>

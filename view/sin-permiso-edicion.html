@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Sin permiso</title>
+
+    <%- include ('partials/head.html'); -%>
+</head>
+
+<body class="pagina-registro">
+
+    <div class="container" style="height: 100%;">
+        <div class="row" style="height: 100%;">
+            <div class="col-sm-9 col-md-7 col-lg-7 mx-auto my-auto">
+                <div class="card card-signin">
+                    <div class="card-body">
+
+                        <div class="text-center">
+                            <img src="/logos/<%= datos.logo %>" height="100px" width="250px">
+                        </div>
+
+                        <H2 class="text-center mt-4 mb-2">
+                            <span class="iconify mr-2" data-icon="bi:x-lg" style="color: #d9534f;"></span> Sin permiso de edición
+                            <span class="iconify ml-2" data-icon="bi:x-lg" style="color: #d9534f;"></span>
+                        </H2>
+
+                        <form class="form-signin">
+                            <div class="row m-0">
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-4 text-center">
+                                    <h5>
+                                        Actualmente no tienes permiso para diseñar y editar el dashboard, por favor consulta con el admnistrador</h5>
+                                </div>
+
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-4 text-center">
+                                    <button id="btn-tablero" type="button" class="btn btn-primary btn-lg px-4" style="border-radius: 5rem;  transition: all 0.2s;">Ir al tablero</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include ('partials/footer.html'); -%>
+
+        <script>
+            $("#btn-tablero").click(function() {
+                window.location.href = "/tablero";
+            });
+        </script>
+
+        <script>
+            $(document).ready(function() {
+                var height = $(window).height();
+                $('.pagina-registro').height(height);
+            });
+
+            // Para detectar cambio de pantalla
+            $(window).resize(function() {
+                var height = $(window).height();
+                $('.pagina-registro').height(height);
+            });
+        </script>
+
+</body>
+
+</html>

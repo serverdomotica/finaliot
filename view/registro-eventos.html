@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Registro eventos</title>
+
+    <%- include ('partials/head.html'); -%>
+
+        <!--IMPORTAR Socket.iot para trabajar con comunicacion socket-->
+        <script src="/socket.io/socket.io.js" charset="utf-8"></script>
+</head>
+
+<body class="pagina-registro">
+
+    <div class="container" style="height: 100%;">
+        <div class="row" style="height: 100%;">
+            <div class="col-sm-12 col-md-12 col-lg-12 mx-auto my-auto">
+                <div class="card card-signin">
+                    <div class="card-body">
+
+                        <div class="text-center">
+                            <img src="/logos/<%= datos.logo %>" height="100px" width="250px">
+                        </div>
+
+                        <H2 class="text-center mt-4 mb-2"> Registrar evento</H2>
+
+                        <div id="spinner" style="display: none;">
+                            <div class="d-flex justify-content-center">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex mt-4">
+                            <button type="button" class="btn html-condicion" style="width: 100%; border-radius: 0;"
+                                onclick="Funcion_Condicion()">Condiciones</button>
+                            <div class="triangulo" onclick="Funcion_Condicion()"></div>
+                            <button type="button" class="btn html-accion" style="width: 100%; border-radius: 0;"
+                                onclick="Funcion_Accion()">Acciones</button>
+                        </div>
+
+                        <div id="form-condicion">
+                            <form class="form-signin">
+                                <div class="row m-0">
+                                    <div id="html-sesion-conf" style="width: 100%;">
+                                        <h6 class="mt-4">El evento se genera si:</h6>
+                                        <div class="row m-0 row-eventos">
+                                            <div class="col-12 col-sm-12 col-md-12 col-lg-4 px-4 mt-2">
+                                                <label>Variable</label>
+                                                <select class="mi-selector input-variable" style="width: 100%;">
+                                                    <option value="0" selected>...</option>
+                                                    <% for(var i=0; i < cantidad_variables; i++) { %>
+                                                        <option value=<%=id_variables[i] %>><%= variables[i] %> (
+                                                                <%=dispositivos_variables[i]%>)</option>
+                                                        <% } %>
+                                                </select>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-12 col-lg-4 px-4 mt-4 mt-lg-2">
+                                                <label>Condicion</label>
+                                                <select class="input-tipo mi-selector" style="width: 100%;">
+                                                    <option value="0" selected>Es igual a</option>
+                                                    <option value="1">Es diferente a</option>
+                                                    <option value="2">Es mayor que</option>
+                                                    <option value="3">Es menor que</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-12 col-lg-4 px-4 mt-4 mt-lg-2">
+                                                <div class="d-flex justify-content-center"
+                                                    style="margin-bottom: .5rem;">
+                                                    <div class="form-check mr-2">
+                                                        <input id="radio-constante-0" class="form-check-input"
+                                                            type="radio" name="radios-0" value="0"
+                                                            onchange="Funcion_Radio(this)" checked>
+                                                        <label class="form-check-label" for="radio-constante-0">
+                                                            Constante
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check ml-2">
+                                                        <input id="radio-variable-0" class="form-check-input"
+                                                            type="radio" name="radios-0" value="1"
+                                                            onchange="Funcion_Radio(this)">
+                                                        <label class="form-check-label" for="radio-variable-0">
+                                                            Variable
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex justify-content-center">
+                                                    <div class="html-constante" style="width: 100%;">
+                                                        <input class="input-val" id="input-val-0" type="number"
+                                                            value="0.0" data-decimals="1" step="0.1" />
+                                                    </div>
+                                                    <div class="html-variable" style="display: none; width: 100%;">
+                                                        <select id="input-radio-variable-0" class="mi-selector"
+                                                            style="width: 100%;">
+                                                            <option value="0" selected>...</option>
+                                                            <% for(var i=0; i < cantidad_variables; i++) { %>
+                                                                <option value="<%=id_variables[i] %>">
+                                                                    <%= variables[i] %> (
+                                                                        <%=dispositivos_variables[i]%>)
+                                                                </option>
+                                                                <% } %>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <div class="d-flex justify-content-center mt-4 mb-3">
+                                <button id="btn-and" type="button" class="btn btn-primary btn-sm mr-2"
+                                    style="border-radius: 5rem;  transition: all 0.2s; width: 140px;">
+                                    <span class='iconify mr-1' data-icon='fluent:add-12-filled'
+                                        style='font-size: 100%;'></span>
+                                    Agregar AND
+                                </button>
+                                <button id="btn-or" type="button" class="btn btn-primary btn-sm ml-2"
+                                    style="border-radius: 5rem;  transition: all 0.2s; width: 140px;">
+                                    <span class='iconify mr-1' data-icon='fluent:add-12-filled'
+                                        style='font-size: 100%;'></span>
+                                    Agregar OR
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="form-accion" style="display: none;">
+                            <form class="form-signin mt-4">
+                                <div class="row m-0">
+                                    <div id="html-accion-conf" style="width: 100%;">
+                                        <div class="row m-0 row-acciones">
+                                            <div class="col-12 col-sm-12 col-md-12 col-lg-3 px-3 mt-4 mt-lg-2 pb-3">
+                                                <label>Tipo de acción</label>
+                                                <select id="input-accion-tipo-0" class="mi-selector"
+                                                    style="width: 100%;" onchange="Funcion_Tipo_Accion(this)">
+                                                    <option value="0" selected>Notificación push</option>
+                                                    <option value="1">Control</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-12 col-lg-3 px-3 mt-4 mt-lg-2">
+                                                <div class="html-accion-titulo" style="width: 100%;">
+                                                    <label>Titulo</label>
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control input-accion-titulo"
+                                                            placeholder="¡Notificación de alerta!"
+                                                            style="height: 28px !important;" required autofocus>
+                                                    </div>
+                                                </div>
+                                                <div class="html-accion-var" style="display: none; width: 100%;">
+                                                    <label>Variable</label>
+                                                    <select class="input-accion-var mi-selector" style="width: 100%;">
+                                                        <option value="0" selected>...</option>
+                                                        <% for(var i=0; i < cantidad_variables; i++) { %>
+                                                            <option value=<%=id_variables[i] %>><%= variables[i] %> (
+                                                                    <%=dispositivos_variables[i]%>)</option>
+                                                            <% } %>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-12 col-lg-3 px-3 mt-4 mt-lg-2">
+                                                <div class="d-flex justify-content-center">
+                                                    <div class="html-accion-contenido" style="width: 100%;">
+                                                        <label>Contenido</label>
+                                                        <div class="form-group">
+                                                            <textarea class="form-control input-accion-contenido pt-1"
+                                                                rows="1"
+                                                                style="font-size: 90% !important; height: 28px !important;"
+                                                                placeholder="La Temperatura ha subido!"></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="html-accion-val" style="display: none; width: 100%;">
+                                                        <label>Valor</label>
+                                                        <input class="input-val" id="input-accion-val-0" type="number"
+                                                            value="0.0" data-decimals="1" step="0.1" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="col-12 col-sm-12 col-md-12 col-lg-2 pl-3 pr-1 mt-4 mt-lg-2 html-tiempo">
+                                                <div style="width: 100%;">
+                                                    <label>Tiempo (min)</label>
+                                                    <input class="input-val" id="input-tiempo-val-0" type="number"
+                                                        value="0" data-decimals="0" step="1" />
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="col-12 col-sm-12 col-md-12 col-lg-1 px-1 mt-3 mt-lg-2 text-center">
+                                                <div class="btn-eliminar-accion mt-1 mt-lg-4">
+                                                    <span id="span-accion-0" style="font-size: 30px !important;"
+                                                        class="iconify ml-3 span-delete-accion mt-1"
+                                                        data-icon="mi:delete"
+                                                        onclick="Funcion_Delete_Accion(this)"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <div class="d-flex justify-content-center mt-4 mb-3">
+                                <button id="btn-añadir" type="button" class="btn btn-primary btn-sm"
+                                    style="border-radius: 5rem;  transition: all 0.2s; width: 140px;">
+                                    <span class='iconify mr-1' data-icon='fluent:add-12-filled'
+                                        style='font-size: 100%;'></span>
+                                    Añadir acción
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-center mt-4 mb-3">
+                            <button id="btn-volver" type="button" class="btn btn-danger btn-lg mr-3 mr-lg-5 px-4"
+                                style="border-radius: 5rem;  transition: all 0.2s;">Regresar</button>
+                            <button id="btn-aceptar" type="button" class="btn btn-danger btn-lg ml-3 ml-lg-5 px-4"
+                                style="border-radius: 5rem;  transition: all 0.2s;">Aceptar</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include ('partials/footer.html'); -%>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
+        <script src="/js/bootstrap-input-spinner.js"></script>
+
+        <script>
+            $("input[type='number']").inputSpinner()
+
+            // Declaracion de variables
+            window.usuario = "<%= datos.id %>"
+            window.anidacion = 0;
+            window.cantidad_val = 0;
+            window.cantidad_accion = 0;
+            window.val_id_variable = [];
+            window.val_id_variable[0] = 0;
+
+            // Condiciones
+            document.getElementsByClassName("input-variable")[0].value = "0";
+            document.getElementsByClassName("input-tipo")[0].value = "0";
+            document.getElementById("input-radio-variable-0").value = "0";
+
+            // Acciones
+            document.getElementById("input-accion-tipo-0").value = "0";
+
+            document.getElementById("radio-constante-0").checked = true;
+            document.getElementById("radio-variable-0").checked = false;
+
+            document.getElementsByClassName("html-condicion")[0].style.background = "#0a2c49";
+            document.getElementsByClassName("html-condicion")[0].style.color = "rgb(255, 255, 255)";
+            document.getElementsByClassName("html-accion")[0].style.background = "rgb(204, 204, 204)";
+            document.getElementsByClassName("html-accion")[0].style.color = "#212122";
+            document.getElementsByClassName("triangulo")[0].style.borderLeftColor = "#0a2c49";
+            document.getElementsByClassName("triangulo")[0].style.borderTopColor = "rgb(204, 204, 204)";
+            document.getElementsByClassName("triangulo")[0].style.borderBottomColor = "rgb(204, 204, 204)";
+
+            // Funciones
+            // HTML de condiciones
+            function Funcion_Condicion() {
+                document.getElementById("form-accion").style.display = "none";
+                document.getElementsByClassName("html-condicion")[0].style.background = "#0a2c49";
+                document.getElementsByClassName("html-condicion")[0].style.color = "rgb(255, 255, 255)";
+                document.getElementsByClassName("html-accion")[0].style.background = "rgb(204, 204, 204)";
+                document.getElementsByClassName("html-accion")[0].style.color = "#212122";
+                document.getElementsByClassName("triangulo")[0].style.borderLeftColor = "#0a2c49";
+                document.getElementsByClassName("triangulo")[0].style.borderTopColor = "rgb(204, 204, 204)";
+                document.getElementsByClassName("triangulo")[0].style.borderBottomColor = "rgb(204, 204, 204)";
+                document.getElementById("form-condicion").style.display = "block";
+            }
+            // HTML de acciones
+            function Funcion_Accion() {
+                document.getElementById("form-condicion").style.display = "none";
+                document.getElementsByClassName("html-condicion")[0].style.background = "rgb(204, 204, 204)";
+                document.getElementsByClassName("html-condicion")[0].style.color = "#212122";
+                document.getElementsByClassName("html-accion")[0].style.background = "#0a2c49";
+                document.getElementsByClassName("html-accion")[0].style.color = "rgb(255, 255, 255)";
+                document.getElementsByClassName("triangulo")[0].style.borderLeftColor = "rgb(204, 204, 204)";
+                document.getElementsByClassName("triangulo")[0].style.borderTopColor = "#0a2c49";
+                document.getElementsByClassName("triangulo")[0].style.borderBottomColor = "#0a2c49";
+                document.getElementById("form-accion").style.display = "block";
+            }
+            // Radio de constante y variable en condiciones
+            function Funcion_Radio(radio) {
+                var id = radio.id;
+                var aux = id.split("-");
+                var index = aux[2];
+                console.log(radio.id, index)
+
+                // Ocultar html para los valores
+                document.getElementsByClassName("html-constante")[index].style.display = "none";
+                document.getElementsByClassName("html-variable")[index].style.display = "none";
+
+                // Obtener el valor del radio de valor constante
+                var estado_constante = document.getElementById("radio-constante-" + index).checked;
+
+                // Accion
+                if (estado_constante == true) {
+                    $("#input-radio-variable-" + index).val("0").trigger("change");
+                    document.getElementsByClassName("html-constante")[index].style.display = "block";
+                    window.val_id_variable[index] = 0;
+                } else {
+                    document.getElementsByClassName("html-variable")[index].style.display = "block";
+                    window.val_id_variable[index] = 1;
+                }
+            }
+            // Tipo de accion (notificacon, control..)
+            function Funcion_Tipo_Accion(selec) {
+                var valor = selec.value;
+                var id = selec.id;
+                var index = id.split("-")[3];
+                console.log(id, index, valor)
+                if (valor == 0) {
+                    document.getElementsByClassName("html-accion-titulo")[index].style.display = "block";
+                    document.getElementsByClassName("html-accion-contenido")[index].style.display = "block";
+                    document.getElementsByClassName("html-accion-var")[index].style.display = "none";
+                    document.getElementsByClassName("html-accion-val")[index].style.display = "none";
+                    document.getElementsByClassName("html-tiempo")[index].style.display = "block";
+
+                } else if (valor == 1) {
+                    document.getElementsByClassName("html-accion-titulo")[index].style.display = "none";
+                    document.getElementsByClassName("html-accion-contenido")[index].style.display = "none";
+                    document.getElementsByClassName("html-accion-var")[index].style.display = "block";
+                    document.getElementsByClassName("html-accion-val")[index].style.display = "block";
+                    document.getElementsByClassName("html-tiempo")[index].style.display = "none";
+
+                }
+            }
+            // Eliminar una condicion
+            function Funcion_Delete(dato) {
+                var aux_id = dato.id;
+                var id = aux_id.split("-")[1];
+                console.log("Funcion delete", id)
+                document.getElementsByClassName("row-eventos")[id].style.display = "none";
+                document.getElementsByClassName("etiqueta-and-or")[id - 1].style.display = "none";
+
+                var cantidad = 0;
+                var aux_cantidad = parseInt(document.getElementsByClassName("row-eventos").length);
+                for (var i = 0; i < aux_cantidad; i++) {
+                    if (document.getElementsByClassName("row-eventos")[i].style.display != "none") {
+                        cantidad = cantidad + 1;
+                    }
+                }
+
+                if (cantidad == 1) {
+                    document.getElementById("btn-and").style.display = "block";
+                    document.getElementById("btn-or").style.display = "block";
+                }
+            }
+            // Eliminar una accion
+            function Funcion_Delete_Accion(dato) {
+                var aux_id = dato.id;
+                var id = aux_id.split("-")[2];
+                console.log("Funcion delete accion", id)
+                document.getElementsByClassName("row-acciones")[id].style.display = "none";
+            }
+
+            // Crear cliente socket
+            const socket = io({
+                autoConnect: true
+            });
+
+            $(document).ready(function () {
+
+                jQuery(document).ready(function ($) {
+                    $(document).ready(function () {
+                        $('.mi-selector').select2();
+                    });
+                });
+
+                $("#btn-condicion").click(function () {
+                    document.getElementsByClassName()
+                });
+                $("#btn-accion").click(function () {
+                    window.location.href = "/panel-usuario";
+                });
+
+                $("#btn-volver").click(function () {
+                    window.location.href = "/panel-usuario";
+                });
+
+                $("#btn-and").click(function () {
+                    window.anidacion = 0;
+                    document.getElementById("btn-or").style.display = "none";
+                    window.cantidad_val = window.cantidad_val + 1;
+                    window.val_id_variable[window.cantidad_val] = 0;
+                    $('#html-sesion-conf').append('<h6 class="etiqueta-and-or m-0 ml-3 mt-4">and</h6>' +
+                        '<div class="row m-0 row-eventos">' +
+                        '<div class="col-12 col-sm-12 col-md-12 col-lg-4 px-4 mt-2">' +
+                        '<label>Variable</label>' +
+                        '<select class="mi-selector input-variable" style="width: 100%;">' +
+                        '<option value="0" selected>...</option>' +
+                        '<% for(var i=0; i < cantidad_variables; i++) { %>' +
+                        '<option value=<%=id_variables[i] %>><%= variables[i] %> (' +
+                        '<%=dispositivos_variables[i]%>)</option>' +
+                        '<% } %>' +
+                        '</select>' +
+                        '</div>' +
+                        '<div class="col-12 col-sm-12 col-md-12 col-lg-4 px-4 mt-4 mt-lg-2">' +
+                        '<label>Condicion</label>' +
+                        '<select class="input-tipo" class="mi-selector" style="width: 100%;">' +
+                        '<option value="0" selected>Es igual a</option>' +
+                        '<option value="1">Es diferente a</option>' +
+                        '<option value="2">Es mayor que</option>' +
+                        '<option value="3">Es menor que</option>' +
+                        '</select>' +
+                        '</div>' +
+                        '<div class="col-12 col-sm-12 col-md-12 col-lg-4 px-4 mt-4 mt-lg-2">' +
+                        '<div class="d-flex justify-content-center" style="margin-bottom: .5rem;">' +
+                        '<div class="form-check mr-2">' +
+                        '<input id="radio-constante-' + window.cantidad_val + '" class="form-check-input" type="radio"' +
+                        'name="radios-' + window.cantidad_val + '" value="0" onchange="Funcion_Radio(this)"' +
+                        'checked>' +
+                        '<label class="form-check-label" for="radio-constante-' + window.cantidad_val + '">' +
+                        'Constante' +
+                        '</label>' +
+                        '</div>' +
+                        '<div class="form-check ml-2">' +
+                        '<input id="radio-variable-' + window.cantidad_val + '" class="form-check-input" type="radio"' +
+                        'name="radios-' + window.cantidad_val + '" value="1" onchange="Funcion_Radio(this)">' +
+                        '<label class="form-check-label" for="radio-variable-' + window.cantidad_val + '">' +
+                        'Variable' +
+                        '</label>' +
+                        '</div>' +
+                        '</div>' +
+                        '<div class="d-flex justify-content-center">' +
+                        '<div class="html-constante" style="width: 100%;">' +
+                        '<input class="input-val" id="input-val-' + window.cantidad_val + '" type="number" value="0.0"' +
+                        'data-decimals="1" step="0.1" />' +
+                        '</div>' +
+                        '<div class="html-variable" style="display: none; width: 100%;">' +
+                        '<select id="input-radio-variable-' + window.cantidad_val + '" class="mi-selector"' +
+                        'style="width: 100%;">' +
+                        '<option value="0" selected>...</option>' +
+                        '<% for(var i=0; i < cantidad_variables; i++) { %>' +
+                        '<option value="<%=id_variables[i] %>">' +
+                        '<%= variables[i] %> (' +
+                        '<%=dispositivos_variables[i]%>)' +
+                        '</option>' +
+                        '<% } %>' +
+                        '</select>' +
+                        '</div>' +
+                        '<div>' +
+                        '<span id="span-' + window.cantidad_val + '" style="font-size: 30px !important;"' +
+                        'class="iconify ml-3 span-delete-evento" data-icon="mi:delete"' +
+                        'onclick="Funcion_Delete(this)"></span>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>');
+                    $("input[type='number']").inputSpinner()
+                });
+                $("#btn-or").click(function () {
+                    window.anidacion = 1;
+                    document.getElementById("btn-and").style.display = "none";
+                    window.cantidad_val = window.cantidad_val + 1;
+                    window.val_id_variable[window.cantidad_val] = 0;
+                    $('#html-sesion-conf').append('<h6 class="etiqueta-and-or m-0 ml-3 mt-4">Or</h6>' +
+                        '<div class="row m-0 row-eventos">' +
+                        '<div class="col-12 col-sm-12 col-md-12 col-lg-4 px-4 mt-2">' +
+                        '<label>Variable</label>' +
+                        '<select class="mi-selector input-variable" style="width: 100%;">' +
+                        '<option value="0" selected>...</option>' +
+                        '<% for(var i=0; i < cantidad_variables; i++) { %>' +
+                        '<option value=<%=id_variables[i] %>><%= variables[i] %> (' +
+                        '<%=dispositivos_variables[i]%>)</option>' +
+                        '<% } %>' +
+                        '</select>' +
+                        '</div>' +
+                        '<div class="col-12 col-sm-12 col-md-12 col-lg-4 px-4 mt-4 mt-lg-2">' +
+                        '<label>Condicion</label>' +
+                        '<select class="input-tipo" class="mi-selector" style="width: 100%;">' +
+                        '<option value="0" selected>Es igual a</option>' +
+                        '<option value="1">Es diferente a</option>' +
+                        '<option value="2">Es mayor que</option>' +
+                        '<option value="3">Es menor que</option>' +
+                        '</select>' +
+                        '</div>' +
+                        '<div class="col-12 col-sm-12 col-md-12 col-lg-4 px-4 mt-4 mt-lg-2">' +
+                        '<div class="d-flex justify-content-center" style="margin-bottom: .5rem;">' +
+                        '<div class="form-check mr-2">' +
+                        '<input id="radio-constante-' + window.cantidad_val + '" class="form-check-input" type="radio"' +
+                        'name="radios-' + window.cantidad_val + '" value="0" onchange="Funcion_Radio(this)"' +
+                        'checked>' +
+                        '<label class="form-check-label" for="radio-constante-' + window.cantidad_val + '">' +
+                        'Constante' +
+                        '</label>' +
+                        '</div>' +
+                        '<div class="form-check ml-2">' +
+                        '<input id="radio-variable-' + window.cantidad_val + '" class="form-check-input" type="radio"' +
+                        'name="radios-' + window.cantidad_val + '" value="1" onchange="Funcion_Radio(this)">' +
+                        '<label class="form-check-label" for="radio-variable-' + window.cantidad_val + '">' +
+                        'Variable' +
+                        '</label>' +
+                        '</div>' +
+                        '</div>' +
+                        '<div class="d-flex justify-content-center">' +
+                        '<div class="html-constante" style="width: 100%;">' +
+                        '<input class="input-val" id="input-val-' + window.cantidad_val + '" type="number" value="0.0"' +
+                        'data-decimals="1" step="0.1" />' +
+                        '</div>' +
+                        '<div class="html-variable" style="display: none; width: 100%;">' +
+                        '<select id="input-radio-variable-' + window.cantidad_val + '" class="mi-selector"' +
+                        'style="width: 100%;">' +
+                        '<option value="0" selected>...</option>' +
+                        '<% for(var i=0; i < cantidad_variables; i++) { %>' +
+                        '<option value="<%=id_variables[i] %>">' +
+                        '<%= variables[i] %> (' +
+                        '<%=dispositivos_variables[i]%>)' +
+                        '</option>' +
+                        '<% } %>' +
+                        '</select>' +
+                        '</div>' +
+                        '<div>' +
+                        '<span id="span-' + window.cantidad_val + '" style="font-size: 30px !important;"' +
+                        'class="iconify ml-3 span-delete-evento" data-icon="mi:delete"' +
+                        'onclick="Funcion_Delete(this)"></span>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>');
+                    $("input[type='number']").inputSpinner()
+                });
+                $("#btn-añadir").click(function () {
+                    window.cantidad_accion = window.cantidad_accion + 1;
+                    $('#html-accion-conf').append('<div class="row m-0 row-acciones">' +
+                        '<div class="col-12 col-sm-12 col-md-12 col-lg-3 px-3 mt-4 mt-lg-2 pb-3">' +
+                        '<label>Tipo de acción</label>' +
+                        '<select id="input-accion-tipo-' + window.cantidad_accion + '" class="mi-selector"' +
+                        'style="width: 100%;" onchange="Funcion_Tipo_Accion(this)">' +
+                        '<option value="0" selected>Notificación push</option>' +
+                        '<option value="1">Control</option>' +
+                        '</select>' +
+                        '</div>' +
+                        '<div class="col-12 col-sm-12 col-md-12 col-lg-3 px-3 mt-4 mt-lg-2">' +
+                        '<div class="html-accion-titulo" style="width: 100%;">' +
+                        '<label>Titulo</label>' +
+                        '<div class="form-group">' +
+                        '<input type="text" class="form-control input-accion-titulo"' +
+                        'placeholder="¡Notificación de alerta!"' +
+                        'style="height: 28px !important;" required autofocus>' +
+                        '</div>' +
+                        '</div>' +
+                        '<div class="html-accion-var" style="display: none; width: 100%;">' +
+                        '<label>Variable</label>' +
+                        '<select class="input-accion-var mi-selector" style="width: 100%;">' +
+                        '<option value="0" selected>...</option>' +
+                        '<% for(var i=0; i < cantidad_variables; i++) { %>' +
+                        '<option value=<%=id_variables[i] %>><%= variables[i] %> (' +
+                        '<%=dispositivos_variables[i]%>)</option>' +
+                        '<% } %>' +
+                        '</select>' +
+                        '</div>' +
+                        '</div>' +
+                        '<div class="col-12 col-sm-12 col-md-12 col-lg-3 px-3 mt-4 mt-lg-2">' +
+                        '<div class="d-flex justify-content-center">' +
+                        '<div class="html-accion-contenido" style="width: 100%;">' +
+                        '<label>Contenido</label>' +
+                        '<div class="form-group">' +
+                        '<textarea class="form-control input-accion-contenido pt-1"' +
+                        'rows="1"' +
+                        'style="font-size: 90% !important; height: 28px !important;"' +
+                        'placeholder="La Temperatura ha subido!"></textarea>' +
+                        '</div>' +
+                        '</div>' +
+                        '<div class="html-accion-val" style="display: none; width: 100%;">' +
+                        '<label>Valor</label>' +
+                        '<input class="input-val" id="input-accion-val-' + window.cantidad_accion + '" type="number"' +
+                        'value="0.0" data-decimals="1" step="0.1" />' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>' +
+                        '<div ' +
+                        'class="col-12 col-sm-12 col-md-12 col-lg-2 pl-3 pr-1 mt-4 mt-lg-2 html-tiempo">' +
+                        '<div style="width: 100%;">' +
+                        '<label>Tiempo (min)</label>' +
+                        '<input class="input-val" id="input-tiempo-val-' + window.cantidad_accion + '" type="number"' +
+                        'value="0" data-decimals="0" step="1" />' +
+                        '</div>' +
+                        '</div>' +
+                        '<div ' +
+                        'class="col-12 col-sm-12 col-md-12 col-lg-1 px-1 mt-3 mt-lg-2 text-center">' +
+                        '<div class="btn-eliminar-accion mt-1 mt-lg-4">' +
+                        '<span id="span-accion-' + window.cantidad_accion + '" style="font-size: 30px !important;"' +
+                        'class="iconify ml-3 span-delete-accion mt-1"' +
+                        'data-icon="mi:delete"' +
+                        'onclick="Funcion_Delete_Accion(this)"></span>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>');
+                    $("input[type='number']").inputSpinner()
+                });
+
+                $("#btn-aceptar").click(function () {
+                    var condicionales = "";
+                    var acciones = "";
+                    var condi="";
+                    var ac="";
+
+                    // Condicionales
+                    var aux_cantidad = parseInt(document.getElementsByClassName("row-eventos").length);
+                    for (var i = 0; i < aux_cantidad; i++) {
+                        if (document.getElementsByClassName("row-eventos")[i].style.display != "none") {
+                            // HTML Variable
+                            var aux_html1 = document.getElementsByClassName("input-variable")[i];
+                            var aux_variable = aux_html1.value;
+                            // HTML Tipos
+                            var aux_html2 = document.getElementsByClassName("input-tipo")[i];
+                            var aux_tipo = aux_html2.value;
+                            if (window.val_id_variable[i] == 0) {
+                                // HTML Val
+                                var index = "input-val-" + i;
+                                var aux_html3 = document.getElementById(index);
+                                var aux_val = aux_html3.value;
+                                condi=condi+"/"+aux_variable+"/"+aux_tipo+"/"+0+"/"+aux_val;
+                                condicionales = condicionales + '*{"id_variable":"' + aux_variable + '","tipo":"' + aux_tipo + '","val_id_variable":"' + 0 + '","val":"' + aux_val + '"}';
+                            } else {
+                                // HTML Val_Variable
+                                var index = "input-radio-variable-" + i;
+                                var aux_html4 = document.getElementById(index);
+                                var aux_val_variable = aux_html4.value;
+                                condi=condi+"/"+aux_variable+"/"+aux_tipo+"/"+aux_val_variable+"/"+0;
+                                condicionales = condicionales + '*{"id_variable":"' + aux_variable + '","tipo":"' + aux_tipo + '","val_id_variable":"' + aux_val_variable + '","val":"' + 0 + '"}';
+                            }
+                        }
+                    }
+
+                    // Acciones
+                    var aux_cantidad_acciones = parseInt(document.getElementsByClassName("row-acciones").length);
+                    for (var i = 0; i < aux_cantidad_acciones; i++) {
+                        if (document.getElementsByClassName("row-acciones")[i].style.display != "none") {
+                            // HTML Tipo de accion
+                            var index = "input-accion-tipo-" + i;
+                            var aux_html1 = document.getElementById(index);
+                            var tipo_accion = aux_html1.value;
+
+                            // Notificacion
+                            var titulo = "", contenido = "";
+                            if (tipo_accion == 0) {
+                                var aux_html2 = document.getElementsByClassName("input-accion-titulo")[i];
+                                titulo = aux_html2.value;
+                                var aux_html3 = document.getElementsByClassName("input-accion-contenido")[i];
+                                contenido = aux_html3.value;
+                                var aux_index2 = "input-tiempo-val-" + i;
+                                var aux_html4 = document.getElementById(aux_index2);
+                                var tiempo = aux_html4.value;
+                                var tiempo_ult = new Date().getTime()
+                                tiempo_ult = parseInt(tiempo_ult) - parseInt(tiempo * 60000)
+                                ac=ac+"/"+tipo_accion+"/"+titulo+"/"+contenido+"/"+tiempo+"/"+tiempo_ult;
+                                acciones = acciones + '*{"tipo":"' + tipo_accion + '","titulo":"' + titulo + '","contenido":"' + contenido + '","tiempo":"' + tiempo + '","tiempo_ult":"' + tiempo_ult + '"}';
+                            }
+                            // Control
+                            var accion_id_variable = "", accion_val = "";
+                            if (tipo_accion == 1) {
+                                var aux_html2 = document.getElementsByClassName("input-accion-var")[i];
+                                accion_id_variable = aux_html2.value;
+                                var aux_index = "input-accion-val-" + i;
+                                var aux_html3 = document.getElementById(aux_index);
+                                accion_val = aux_html3.value;
+                                ac=ac+"/"+tipo_accion+"/"+accion_id_variable+"/"+accion_val;
+                                acciones = acciones + '*{"tipo":"' + tipo_accion + '","id_variable":"' + accion_id_variable + '","val":"' + accion_val + '"}';
+                            }
+                        }
+                    }
+                    console.log(condicionales)
+                    console.log(acciones)
+                    console.log(ac);
+                    console.log(condi);
+
+                    /* if (id_variable == 0) {
+                         $.alert('' +
+                             '<label>Tienes que seleccionar una variable para el widget</label>' +
+                             '<div class="text-center">' +
+                             '<i class="fas fa-times fa-4x"></i>' +
+                             '</div>');
+                         return false;
+                     }*/
+
+                    var mensaje = '¿Deseas registrar el evento?';
+
+                    $.confirm({
+                        title: 'Confimar',
+                        content: mensaje,
+                        buttons: {
+                            Si: function () {
+                                document.getElementById("spinner").style.display = "block"
+                                $.post("/datos-registro-bd", {
+                                    anidacion,
+                                    condicionales,
+                                    acciones,
+                                    bd: "eventos"
+                                }, function (res) {
+                                    console.log(res)
+                                    var respuesta = res;
+                                    if (respuesta == "Error") {
+                                        $.alert('' +
+                                            '<label>Error al registrar</label>' +
+                                            '<div class="text-center">' +
+                                            '<i class="fas fa-times fa-4x"></i>' +
+                                            '</div>');
+                                    } else {
+                                      var arrayDeCadenas = respuesta.split("/");
+                                      var arrayDeCadenas1 = ac.split("/");
+                                      var arrayDeCadenas2= condi.split("/");
+                                      console.log(arrayDeCadenas[1]);
+                                      firebase.database().ref('eventos/'+arrayDeCadenas[3]).set({
+                                        anidacion:anidacion,
+                                        id_usuario:arrayDeCadenas[0],
+
+                                      });
+                                      firebase.database().ref('eventos/'+arrayDeCadenas[3]+"/condicionales").set({
+                                        id_variable:arrayDeCadenas2[1],
+                                        tipo:arrayDeCadenas2[2],
+                                        val_id_variable:arrayDeCadenas2[3],
+                                        val:arrayDeCadenas2[4]
+
+                                      });
+                                      if(tipo_accion==1){
+                                        firebase.database().ref('eventos/'+arrayDeCadenas[3]+"/acciones").set({
+                                          tipo:arrayDeCadenas1[1],
+                                          id_variable:arrayDeCadenas1[2],
+                                          val:arrayDeCadenas1[3]
+
+                                        });
+                                      }
+                                      else{
+                                        firebase.database().ref('eventos/'+arrayDeCadenas[3]+"/acciones").set({
+                                          tipo:arrayDeCadenas1[1],
+                                          titulo:arrayDeCadenas1[2],
+                                          contenido:arrayDeCadenas1[3],
+                                          tiempo:arrayDeCadenas1[4],
+                                          tiempo_ult:arrayDeCadenas1[5],
+
+
+                                        });
+                                      }
+
+
+                                        $.alert('' +
+                                            '<label>Evento registrado exitosamente.' +
+                                            '</label>' +
+                                            '<div class="text-center">' +
+                                            '<i class="fas fa-check fa-4x"></i>' +
+                                            '</div>');
+                                    }
+                                }).done(function () {
+                                    document.getElementById("spinner").style.display = "none"
+                                });
+                            },
+                            No: function () { },
+                        }
+                    });
+                });
+            });
+        </script>
+
+        <script>
+            $(document).ready(function () {
+                var height = $(window).height();
+                $('.pagina-registro').height(height);
+            });
+
+            // Para detectar cambio de pantalla
+            $(window).resize(function () {
+                var height = $(window).height();
+                $('.pagina-registro').height(height);
+            });
+        </script>
+
+</body>
+
+</html>

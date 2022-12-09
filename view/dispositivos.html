@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Dispositivos registrados</title>
+
+    <%- include ('partials/head.html'); -%>
+
+        <script src="/socket.io/socket.io.js" charset="utf-8"></script>
+        <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
+        <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="pagina-panel pt-2">
+
+    <div class="etiqueta mx-3 mt-2">
+        <div class="row">
+            <div class="col-7 col-sm-7 col-md-6 col-lg-8">
+                <h2 class="mx-3 pt-2 pb-1 text-white">
+                    <span id="icono-titulo" style="font-size: 80%;" class="iconify"
+                        data-icon="si-glyph:cashier-machine"></span>
+                    <spam id="html-titulo" style="font-size: 85%;" class="mx-2"></spam>
+                </h2>
+            </div>
+            <div class="col-5 col-sm-5 col-md-6 col-lg-4 my-auto">
+                <div class="d-flex justify-content-end py-auto pr-3">
+                    <button id="btn-volver" type="button" class="btn btn-danger px-3 mr-3"
+                        style="border-radius: 5rem;  transition: all 0.2s;">
+                    </button>
+                    <button id="btn-cerrar-sesion" type="button" class="btn btn-danger px-3"
+                        style="border-radius: 5rem;  transition: all 0.2s;">
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="spinner" class="mb-2" style="display: none;">
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="mx-3 mb-0 mt-4">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-2">
+                <div class="d-flex m-0 mb-2 ml-3 justify-content-start">
+                    <h6 class="my-auto mr-3" style="color: rgb(255, 255, 255, 1);">Desde:</h6>
+                    <input class="picker-style" id="datepicker1a" width="180" />
+                    <h6 class="my-auto ml-3 mr-3" style="color: rgb(255, 255, 255, 1);">Hasta:</h6>
+                    <input class="picker-style" id="datepicker1b" width="180" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mx-0">
+        <div class="row m-0">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-4">
+                <div class="table-responsive mb-2 px-sm-5 px-4">
+                    <table class="table table-bordered table-dark mt-2">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="text-align: center; display: none;"></th>
+                                <th scope="col" style="text-align: center;">Creado el <span class="iconify"
+                                        data-icon="akar-icons:arrow-down"></span> </th>
+                                <th scope="col" style="text-align: center;">ID</th>
+                                <th scope="col" style="text-align: center;">Nombre</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="tabla">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center" style="width: 100%; margin-top: -30px;">
+            <ul class="pagination pager justify-content-center" id="myPager"></ul>
+        </div>
+
+    </div>
+
+    <%- include ('partials/footer.html'); -%>
+        <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+
+        <script>
+            window.usuario = "<%= datos.id %>"
+
+            // Configuracion inicial del selector de Fecha
+            var AnoActual = new Date().getFullYear()
+            var MesActual = new Date().getMonth()
+            var DiaActual = new Date().getDate()
+            var HoraActual = new Date().getHours()
+            var MinutoActual = new Date().getMinutes()
+            var SegundoActual = new Date().getSeconds()
+
+            var FechaInicio_bd = new Date(AnoActual, (MesActual - 1), DiaActual)
+            var FechaFinal_bd = new Date();
+
+            var Aux_Fecha_Inicio = DiaActual + "/" + MesActual + "/" + AnoActual
+            var FechaActual_datepicker = DiaActual + "/" + (MesActual + 1) + "/" + AnoActual
+
+            // Crear cliente socket
+            const socket = io({
+                autoConnect: true
+            });
+
+            // Conexion socket con el servidor
+            socket.on('connect', () => {
+                socket.emit('Consulta', window.usuario, "dispositivos", FechaInicio_bd, FechaFinal_bd)
+            });
+
+            // Recepcion de datos a traves de sockets
+            socket.on('Dispositivos', function (final_trama, datos) {
+                if (datos) {
+                    console.log("Registro:", datos)
+
+                    var fila = "<tr>" +
+                        "<td style='text-align: center; display: none;'>" + datos.id + "</td>" +
+                        "<td style='text-align: center;'>" + datos.fecha + "</td>" +
+                        "<td style='text-align: center;'>" + datos.id + "</td>" +
+                        "<td style='text-align: center;'>" + datos.nombre + "</td>" +
+                        "<td style='text-align:center; vertical-align:middle; width: 100px !important;'><input type='button' class='btn btn-danger btn-sm btn-borrar pl-3' value='Borrar'/></td>" +
+                        "</tr>"
+
+                    var btn = document.createElement("TR");
+                    btn.innerHTML = fila;
+                    document.getElementById("tabla").appendChild(btn);
+
+                    if (final_trama == 1) {
+                        $('#tabla').pageMe({
+                            pagerSelector: '#myPager',
+                            showPrevNext: true,
+                            hidePageNumbers: false,
+                            perPage: 10
+                        });
+                    }
+                }
+            });
+
+            // LEER BOTONES
+            $("#btn-volver").click(function () {
+                window.location.href = "/panel-usuario";
+            });
+            $("#btn-cerrar-sesion").click(function () {
+                $.post("/cerrar-sesion", function (res) {
+                    console.log(res)
+                    if (res == "ok")
+                        window.location.href = "/";
+                });
+            });
+
+            // FUNCIONES
+            function EnviarDatosTabla(Inicio, Final) {
+                socket.emit('Consulta', window.usuario, "dispositivos", Inicio, Final)
+            }
+
+            // DATEPICKERS
+            $('#datepicker1a').datepicker({
+                uiLibrary: 'bootstrap4',
+                format: 'dd/mm/yyyy',
+                footer: true,
+                modal: true,
+                icons: {
+                    rightIcon: '<i style="color: #495057;" class="far fa-calendar-alt icon-datepicker"></i>'
+                },
+                value: Aux_Fecha_Inicio,
+                maxDate: function () {
+                    return $('#datepicker1b').val();
+                },
+                change: function (e) {
+                    var Fecha_Inicio = $('#datepicker1a').val();
+                    var Table = document.getElementById("tabla")
+                    Table.innerHTML = "";
+                    var aux = Fecha_Inicio.split("/")
+                    var ano = aux[2]
+                    var mes = aux[1] - 1
+                    var dia = aux[0]
+                    FechaInicio_bd = new Date(ano, mes, dia)
+                    EnviarDatosTabla(FechaInicio_bd, FechaFinal_bd)
+                }
+            });
+            $('#datepicker1b').datepicker({
+                uiLibrary: 'bootstrap4',
+                format: 'dd/mm/yyyy',
+                footer: true,
+                modal: true,
+                icons: {
+                    rightIcon: '<i style="color: #495057;" class="far fa-calendar-alt"></i>'
+                },
+                value: FechaActual_datepicker,
+                minDate: function () {
+                    return $('#datepicker1a').val();
+                },
+                change: function (e) {
+                    var Fecha_Seleccionada = $('#datepicker1b').val();
+                    var Table = document.getElementById("tabla")
+                    Table.innerHTML = "";
+                    var aux = Fecha_Seleccionada.split("/")
+                    var ano = aux[2]
+                    var mes = aux[1] - 1
+                    var dia = aux[0]
+                    FechaFinal_bd = new Date(ano, mes, dia, 23, 59, 59)
+                    EnviarDatosTabla(FechaInicio_bd, FechaFinal_bd)
+                }
+            });
+
+            $(document).on('click', '.btn-borrar', function (event) {
+                event.preventDefault();
+                var item = $(this).closest('tr')
+
+                $.confirm({
+                    title: 'Confimar',
+                    content: "¿Estas seguro de borrar al dispositivo de la base de datos?",
+                    buttons: {
+                        Si: function () {
+                            document.getElementById("spinner").style.display = "block"
+                            $tds = item.find("td:nth-child(1)");
+                            $.each($tds, function () {
+                                window.valor = $(this).text();
+                                console.log("Eliminar:", window.valor);
+                            });
+                            $.post("/eliminar-registro-bd", {
+                                bd: "dispositivos",
+                                id: window.valor
+                            }, function (res) {
+                                console.log(res)
+                                respuesta = res;
+                                if (respuesta == "Eliminado") {
+                                  const datosMostrar=[];
+                                  const datosMostrar1=[];
+                                  firebase.database().ref('dispositivos/'+window.valor).remove();
+                                  const refHosp=firebase.database().ref().child("variables");
+                                  refHosp.on("value",function(snapshot){
+                                    var datosFB=snapshot.val();
+                                    for (var key in datosFB) {
+                                      datosMostrar.push(datosFB[key].id_dispositivos);
+                                      datosMostrar1.push(key);
+                                    }
+                                    for (var k = 0; k < datosMostrar.length; k++){
+                                      if(window.valor==datosMostrar[k]){
+                                          firebase.database().ref('variablles/'+datosMostrar1[k]).remove();
+
+                                      }
+                                    }
+                                  });
+                                    $.alert('' +
+                                        '<label>Dispositivo eliminado exitosamente</label>' +
+                                        '<div class="text-center">' +
+                                        '<i class="fas fa-check fa-4x"></i>' +
+                                        '</div>');
+                                    item.remove();
+                                }
+                                if (respuesta == "Error") {
+                                    $.alert('' +
+                                        '<label>Error al eliminar</label>' +
+                                        '<div class="text-center">' +
+                                        '<i class="fas fa-times fa-4x"></i>' +
+                                        '</div>');
+                                }
+                            }).done(function () {
+                                document.getElementById("spinner").style.display = "none"
+                            });
+                        },
+                        No: function () { },
+                    }
+                });
+            });
+        </script>
+
+        <script>
+            function Diseno_Botones() {
+                var width = $(window).width();
+                if (width < 681) {
+                    document.getElementById("btn-volver").innerHTML = "<span class='iconify' data-icon='akar-icons:arrow-back-thick' style='font-size: 140%;'></span>";
+                    document.getElementById("btn-cerrar-sesion").innerHTML = "<span class='iconify' data-icon='codicon:sign-out' style='font-size: 140%;'></span>";
+                } else {
+                    document.getElementById("btn-volver").innerHTML = "<span class='iconify mr-2' data-icon='akar-icons:arrow-back-thick' style='font-size: 140%;'></span>Menú";
+                    document.getElementById("btn-cerrar-sesion").innerHTML = "<span class='iconify mr-2' data-icon='codicon:sign-out' style='font-size: 140%;'></span>Salir";
+                }
+                if (width < 480) {
+                    document.getElementById("html-titulo").innerHTML = "Dispositivos"
+                    document.getElementById("html-titulo").style.fontSize = "50%";
+                    document.getElementById("icono-titulo").style.fontSize = "80%";
+                } else {
+                    document.getElementById("html-titulo").innerHTML = "Dispositivos"
+                    document.getElementById("html-titulo").style.fontSize = "85%";
+                    document.getElementById("icono-titulo").style.fontSize = "100%";
+                }
+            }
+            // Cuando se abre el documento
+            $(document).ready(function () {
+                Diseno_Botones();
+            });
+
+            // Para detectar cambio de pantalla
+            $(window).resize(function () {
+                Diseno_Botones();
+            });
+        </script>
+
+        <!-- Paginacion para las tablas -->
+        <script src="js/pager-table.js"></script>
+
+</body>
+
+</html>
